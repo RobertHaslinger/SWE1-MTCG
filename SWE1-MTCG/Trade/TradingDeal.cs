@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SWE1_MTCG
+namespace SWE1_MTCG.Trade
 {
-    public class Store
+    public class TradingDeal
     {
 
+
         #region fields
+
+        private User _requestor;
 
         #endregion
 
@@ -17,6 +19,10 @@ namespace SWE1_MTCG
         #endregion
 
         #region constructor
+        public TradingDeal(User requestor)
+        {
+            _requestor = requestor;
+        }
 
         #endregion
 
@@ -25,11 +31,10 @@ namespace SWE1_MTCG
         #endregion
 
         #region public methods
-        public IEnumerable GetOpenTradingDealsByUser(string username)
+        public string GetRequestor()
         {
-            throw new NotImplementedException();
+            return _requestor.GetUsername();
         }
-
         #endregion
 
 

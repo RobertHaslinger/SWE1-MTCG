@@ -9,6 +9,7 @@ namespace SWE1_MTCG
         #region fields
 
         private string _credentials;
+        private string _username;
 
         #endregion
 
@@ -17,6 +18,7 @@ namespace SWE1_MTCG
 
         public User(string username, string password)
         {
+            _username = username;
             _credentials = $"{username}:{Hash(password)}";
         }
 
@@ -48,9 +50,6 @@ namespace SWE1_MTCG
             throw new NotImplementedException();
         }
 
-        #endregion
-
-
         public void Register()
         {
             throw new NotImplementedException();
@@ -70,5 +69,13 @@ namespace SWE1_MTCG
         {
             throw new NotImplementedException();
         }
+
+        public string GetUsername()
+        {
+            return _username;
+        }
+        #endregion
+
+
     }
 }
