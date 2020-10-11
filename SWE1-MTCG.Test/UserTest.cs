@@ -25,6 +25,17 @@ namespace SWE1_MTCG.Test
         }
 
         [Test]
+        public void Test_UserLoginShouldReturnTrueWhenRegistered()
+        {
+            //act
+            _user.Register();
+            bool isLoggedIn = _user.Login();
+
+            //assert
+            Assert.IsFalse(isLoggedIn);
+        }
+
+        [Test]
         public void Test_UserShouldBeRegisteredAfterRegister()
         {
             //act
@@ -41,7 +52,7 @@ namespace SWE1_MTCG.Test
         {
             //act
             _user.AddCoins(coins);
-            bool hasPackageAcquired = UserTest.AcquirePackage();
+            bool hasPackageAcquired = _user.AcquirePackage();
 
             //assert
             Assert.IsFalse(hasPackageAcquired);
@@ -53,7 +64,7 @@ namespace SWE1_MTCG.Test
         {
             //act
             _user.AddCoins(coins);
-            bool hasPackageAcquired = UserTest.AcquirePackage();
+            bool hasPackageAcquired = _user.AcquirePackage();
 
             //assert
             Assert.IsTrue(hasPackageAcquired);
