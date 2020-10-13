@@ -9,6 +9,5 @@ namespace SWE1_MTCG.Interfaces
     public interface ICardCollection
     {
         IEnumerable GetAllCards();
-        void AddCard(Card card);
     }
 }

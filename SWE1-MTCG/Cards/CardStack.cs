@@ -8,9 +8,51 @@ namespace SWE1_MTCG.Cards
 {
     public class CardStack : ICardCollection
     {
+
+        #region fields
+
+        protected List<Card> _cards;
+        #endregion
+
+        #region properties
+
+        #endregion
+
+        #region constructor
+
+        public CardStack()
+        {
+            _cards = new List<Card>();
+        }
+        #endregion
+
+        #region private methods
+
+        #endregion
+
+        #region public methods
+
         public IEnumerable GetAllCards()
         {
-            throw new NotImplementedException();
+            return _cards;
         }
+
+        public void AddCard(Card card)
+        {
+            _cards.Add(card);
+        }
+
+        public void AddCards(IEnumerable cards)
+        {
+            if (cards == null)
+            {
+                return;
+            }
+
+            _cards.AddRange(cards as List<Card>);
+        }
+
+        #endregion
+
     }
 }

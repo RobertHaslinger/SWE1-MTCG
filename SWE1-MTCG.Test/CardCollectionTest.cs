@@ -43,7 +43,7 @@ namespace SWE1_MTCG.Test
         public void Test_DeckShouldOnlyGetRandomCardThatIsInDeck()
         {
             //arrange
-            ICardCollection deck = new Deck();
+            CardStack deck = new Deck();
             Card dragon = new Dragon("Great Dragon", 40, ElementType.Normal);
             Card fireSpell = new FireSpell("Fireball", 60, ElementType.Fire);
 
