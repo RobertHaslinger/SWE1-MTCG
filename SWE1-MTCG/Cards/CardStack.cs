@@ -37,19 +37,15 @@ namespace SWE1_MTCG.Cards
             return _cards;
         }
 
-        public void AddCard(Card card)
+        public virtual bool AddCard(Card card)
         {
             _cards.Add(card);
+            return true;
         }
 
-        public void AddCards(IEnumerable cards)
+        public bool RemoveCard(Card card)
         {
-            if (cards == null)
-            {
-                return;
-            }
-
-            _cards.AddRange(cards as List<Card>);
+            return _cards.Remove(card);
         }
 
         #endregion

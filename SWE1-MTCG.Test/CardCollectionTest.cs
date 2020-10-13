@@ -57,5 +57,43 @@ namespace SWE1_MTCG.Test
             //assert
             Assert.IsTrue(isInDeck);
         }
+
+        [Test]
+        public void Test_DeckShouldNotAddCardWhenThereAreAlreadyTwoCopies()
+        {
+            //arrange
+            CardStack deck = new Deck();
+            Card dragon = new Dragon("Great Dragon", 40, ElementType.Normal);
+
+            //act
+            bool cardAdded;
+            deck.AddCard(dragon);
+            deck.AddCard(dragon);
+            cardAdded = deck.AddCard(dragon);
+
+            //assert
+            Assert.IsFalse(cardAdded);
+        }
+
+        [Test]
+        public void Test_DeckShouldNotAddCardWhenThereAreAlreadyFourCards()
+        {
+            //arrange
+            CardStack deck = new Deck();
+            Card dragon = new Dragon("Great Dragon", 40, ElementType.Normal);
+            Card fireDragon = new Dragon("Small Fire Dragon", 20, ElementType.Fire);
+            Card tentakel= new Kraken("Tentakel", 30, ElementType.Water);
+
+            //act
+            bool cardAdded;
+            deck.AddCard(dragon);
+            deck.AddCard(dragon);
+            deck.AddCard(fireDragon);
+            deck.AddCard(tentakel);
+            cardAdded = deck.AddCard(tentakel);
+
+            //assert
+            Assert.IsFalse(cardAdded);
+        }
     }
 }
