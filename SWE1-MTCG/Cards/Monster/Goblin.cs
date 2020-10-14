@@ -14,5 +14,10 @@ namespace SWE1_MTCG.Cards.Monster
             Damage = damage;
             Element = element;
         }
+
+        public bool TryActScared(Card possibleDragon)
+        {
+            return possibleDragon is Dragon;
+        }
     }
 }

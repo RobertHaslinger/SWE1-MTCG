@@ -15,5 +15,9 @@ namespace SWE1_MTCG.Cards.Monster
             Element = element;
         }
 
+        public bool TryResistSpell(Card spell)
+        {
+            return spell is ISpell;
+        }
     }
 }

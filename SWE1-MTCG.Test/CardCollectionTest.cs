@@ -45,7 +45,7 @@ namespace SWE1_MTCG.Test
             //arrange
             CardStack deck = new Deck();
             Card dragon = new Dragon("Great Dragon", 40, ElementType.Normal);
-            Card fireSpell = new FireSpell("Fireball", 60, ElementType.Fire);
+            Card fireSpell = new FireSpell("Fireball", 60);
 
 
             //act

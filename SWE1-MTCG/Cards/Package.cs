@@ -38,7 +38,7 @@ namespace SWE1_MTCG.Cards
             Card fireDragon= new Dragon("Fire Dragon", 70, ElementType.Fire);
             Card goldenKnight= new Knight("Golden Knight", 45, ElementType.Normal);
             Card gandalf= new Wizard("Gandalf", 30, ElementType.Water);
-            Card cascade = new WaterSpell("Cascade", 35, ElementType.Water);
+            Card cascade = new WaterSpell("Cascade", 35);
             Card theodor= new Orc("Theodor", 50, ElementType.Normal);
 
             _cards.AddRange(new [] {fireDragon, goldenKnight, gandalf, cascade, theodor});
