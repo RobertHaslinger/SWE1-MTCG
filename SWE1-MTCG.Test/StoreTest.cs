@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using NUnit.Framework;
 using SWE1_MTCG.Trade;
 
@@ -61,7 +62,7 @@ namespace SWE1_MTCG.Test
         [Test]
         public void Test_StoreShouldOnlyListTradingDealsThatMatchRequirements()
         {
-            //TODO discuss how to keep it simple (arrange could become complex --> class diagram)
+            throw new NotImplementedException();
         }
     }
 }

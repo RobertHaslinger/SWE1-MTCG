@@ -1,7 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
 using SWE1_MTCG.Enums;
-using SWE1_MTCG.Interfaces;
 using SWE1_MTCG.Services;
 
 namespace SWE1_MTCG.Test

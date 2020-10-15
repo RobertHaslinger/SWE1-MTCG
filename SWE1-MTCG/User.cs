@@ -1,15 +1,25 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using SWE1_MTCG.Cards;
+using SWE1_MTCG.Interfaces;
+using SWE1_MTCG.Services;
 
 namespace SWE1_MTCG
 {
     public class User
     {
         #region fields
-
         private string _credentials;
-        private string _username;
+        private Stack<Package> _currentUnopenedPackages = new Stack<Package>();
+        #endregion
+
+        #region properties
+
+        public string Username { get; }
+        public int Coins { get; private set; } = 0;
 
         #endregion
 
@@ -18,7 +28,7 @@ namespace SWE1_MTCG
 
         public User(string username, string password)
         {
-            _username = username;
+            Username = username;
             _credentials = $"{username}:{Hash(password)}";
         }
 
@@ -45,36 +55,43 @@ namespace SWE1_MTCG
 
         #region public methods
 
-        public bool Login()
+        public void AddCoins(int amount)
         {
-            throw new NotImplementedException();
+            if (amount > 0)
+            {
+                Coins += amount;
+            }
         }
 
-        public void Register()
+        public void RemoveCoins(int amount)
         {
-            throw new NotImplementedException();
+            if (amount < 0)
+            {
+                Coins -= amount;
+            }
         }
 
-        public bool IsRegistered()
+        public void AddPackage(Package package)
         {
-            throw new NotImplementedException();
+            if (package == null) return;
+
+            _currentUnopenedPackages.Push(package);
         }
 
-        public void AddCoins(in int coins)
+        public IEnumerable OpenPackage()
         {
-            throw new NotImplementedException();
+            if (!HasAnyUnopenedPackages()) return null;
+
+            return _currentUnopenedPackages.Pop().GetAllCards();
         }
 
-        public bool AcquirePackage()
+        public bool HasAnyUnopenedPackages()
         {
-            throw new NotImplementedException();
+            return _currentUnopenedPackages.Count > 0;
         }
 
-        public string GetUsername()
-        {
-            return _username;
-        }
         #endregion
+
 
 
     }

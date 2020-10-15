@@ -33,7 +33,7 @@ namespace SWE1_MTCG.Trade
         #region public methods
         public string GetRequestor()
         {
-            return _requestor.GetUsername();
+            return _requestor.Username;
         }
         #endregion
 
