@@ -126,11 +126,11 @@ namespace SWE1_MTCG.Test
         public void Test_FireElveShouldEvadeDragonAttack()
         {
             //arrange
-            Card fireElve = new FireElve("Tentakel", 50, ElementType.Normal);
+            Card fireElve = new FireElf("Tentakel", 50, ElementType.Normal);
             Card dragon = new Dragon("Fire Dragon", 20, ElementType.Fire);
 
             //act
-            bool hasEvaded = ((FireElve)fireElve).TryEvadeAttack(dragon);
+            bool hasEvaded = ((FireElf)fireElve).TryEvadeAttack(dragon);
 
             //assert
             Assert.IsTrue(hasEvaded);
@@ -140,11 +140,11 @@ namespace SWE1_MTCG.Test
         public void Test_FireElveShouldNotEvadeNonDragonAttack()
         {
             //arrange
-            Card fireElve = new FireElve("Tentakel", 50, ElementType.Normal);
+            Card fireElve = new FireElf("Tentakel", 50, ElementType.Normal);
             Card nonDragon = new FireSpell("Fireball", 20);
 
             //act
-            bool hasEvaded = ((FireElve)fireElve).TryEvadeAttack(nonDragon);
+            bool hasEvaded = ((FireElf)fireElve).TryEvadeAttack(nonDragon);
 
             //assert
             Assert.IsFalse(hasEvaded);

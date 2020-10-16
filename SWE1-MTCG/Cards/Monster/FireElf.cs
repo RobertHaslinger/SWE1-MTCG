@@ -6,13 +6,10 @@ using SWE1_MTCG.Interfaces;
 
 namespace SWE1_MTCG.Cards.Monster
 {
-    public class FireElve : Card, IMonster
+    public class FireElf : Card, IMonster
     {
-        public FireElve(string name, double damage, ElementType element)
+        public FireElf(string name, double damage, ElementType element) : base(name, damage, element)
         {
-            Name = name;
-            Damage = damage;
-            Element = element;
         }
 
         public bool TryEvadeAttack(Card dragon)

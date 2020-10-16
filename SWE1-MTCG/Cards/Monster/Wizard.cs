@@ -8,11 +8,8 @@ namespace SWE1_MTCG.Cards.Monster
 {
     public class Wizard : Card, IMonster
     {
-        public Wizard(string name, double damage, ElementType element)
+        public Wizard(string name, double damage, ElementType element) : base(name, damage, element)
         {
-            Name = name;
-            Damage = damage;
-            Element = element;
         }
 
         public bool TryControlOrc(Card possibleOrc)

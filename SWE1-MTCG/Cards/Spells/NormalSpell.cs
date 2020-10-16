@@ -7,11 +7,8 @@ namespace SWE1_MTCG.Cards.Spells
 {
     public class NormalSpell : Card, ISpell
     {
-        public NormalSpell(string name, double damage)
+        public NormalSpell(string name, double damage) : base(name, damage, ElementType.Normal)
         {
-            Name = name;
-            Damage = damage;
-            Element = ElementType.Normal;
         }
     }
 }

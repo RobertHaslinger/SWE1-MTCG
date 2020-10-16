@@ -35,7 +35,7 @@ namespace SWE1_MTCG.Services
                         default: return ElementEffectiveness.Normal;
                     }
                 }
-                default:
+                case ElementType.Normal:
                 {
                     switch (element2)
                     {
@@ -44,6 +44,7 @@ namespace SWE1_MTCG.Services
                         default: return ElementEffectiveness.Normal;
                     }
                 }
+                default: return ElementEffectiveness.Normal;
             }
         }
     }

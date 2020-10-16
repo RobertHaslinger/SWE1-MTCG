@@ -9,11 +9,8 @@ namespace SWE1_MTCG.Cards.Monster
 {
     public class Knight : Card, IMonster
     {
-        public Knight(string name, double damage, ElementType element)
+        public Knight(string name, double damage, ElementType element) : base(name, damage, element)
         {
-            Name = name;
-            Damage = damage;
-            Element = element;
         }
 
         public bool TryDrown(Card waterSpell)

@@ -8,11 +8,8 @@ namespace SWE1_MTCG.Cards.Monster
 {
     public class Goblin : Card, IMonster
     {
-        public Goblin(string name, double damage, ElementType element)
+        public Goblin(string name, double damage, ElementType element) : base(name, damage, element)
         {
-            Name = name;
-            Damage = damage;
-            Element = element;
         }
 
         public bool TryActScared(Card possibleDragon)

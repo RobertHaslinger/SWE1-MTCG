@@ -8,11 +8,8 @@ namespace SWE1_MTCG.Cards.Monster
 {
     public class Orc : Card, IMonster
     {
-        public Orc(string name, double damage, ElementType element)
+        public Orc(string name, double damage, ElementType element) : base(name, damage, element)
         {
-            Name = name;
-            Damage = damage;
-            Element = element;
         }
     }
 }
