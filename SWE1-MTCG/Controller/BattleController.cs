@@ -13,7 +13,6 @@ namespace SWE1_MTCG.Controller
 
         #region fields
         private IBattleService _battleService;
-        private Dictionary<BattleBase, CancellationToken> _currentBattles = new Dictionary<BattleBase, CancellationToken>();
         #endregion
 
         #region properties
@@ -35,9 +34,6 @@ namespace SWE1_MTCG.Controller
 
         public bool StartBattle(BattleBase battle)
         {
-            CancellationToken cancellationToken= new CancellationTokenSource().Token;
-            _currentBattles.Add(battle, cancellationToken);
-            //Start new Task
             BattleResult battleResult = _battleService.StartBattle(battle.Player1, battle.Player2);
             bool finishedCorrectly = true;
 
@@ -53,22 +49,13 @@ namespace SWE1_MTCG.Controller
                     _battleService.CalculateAndApplyMmr(battle.Player2, battle.Player1);
                     break;
                 }
-                case BattleResult.Cancelled:
                 default:
                 {
                     finishedCorrectly=false;
                     break;
                 }
             }
-
-            _currentBattles.Remove(battle);
             return finishedCorrectly;
-        }
-
-        public void CancelBattle(User involvedUser)
-        {
-            //Request to cancel the Task
-            throw new NotImplementedException();
         }
         #endregion
 

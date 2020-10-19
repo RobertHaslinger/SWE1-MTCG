@@ -25,17 +25,6 @@ namespace SWE1_MTCG.Test
         }
 
         [Test]
-        public void Test_BattleControllerShouldNotCalculateMmrIfBattleResultIsCancelled()
-        {
-            _battleServiceMock.Setup(s => s.StartBattle(_player1, _player2)).Returns(BattleResult.Cancelled);
-
-            _battleController.StartBattle(new BattleBase(_player1, _player2));
-            _battleController.CancelBattle(_player1);
-
-            _battleServiceMock.Verify(s => s.CalculateAndApplyMmr(_player1, _player2), Times.Never);
-        }
-
-        [Test]
         public void Test_BattleControllerShouldNotCalculateMmrIfBattleResultIsDraw()
         {
             _battleServiceMock.Setup(s => s.StartBattle(_player1, _player2)).Returns(BattleResult.Draw);
