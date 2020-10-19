@@ -7,6 +7,6 @@ namespace SWE1_MTCG.Services
 {
     public interface IElementService
     {
-        double CompareElement(ElementType fire, ElementType normal);
+        double CompareElement(ElementType element1, ElementType element2);
     }
 }

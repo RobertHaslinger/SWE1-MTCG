@@ -20,6 +20,8 @@ namespace SWE1_MTCG
 
         public string Username { get; }
         public int Coins { get; private set; } = 0;
+        public Deck Deck { get; set; } = new Deck();
+        public CardStack Stack { get; set; } = new CardStack();
 
         #endregion
 

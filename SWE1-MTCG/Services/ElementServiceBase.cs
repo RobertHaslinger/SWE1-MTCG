@@ -19,12 +19,12 @@ namespace SWE1_MTCG.Services
             {
                 case ElementType.Fire:
                 {
-                    switch (element2)
+                    return element2 switch
                     {
-                            case ElementType.Normal: return ElementEffectiveness.Effective;
-                            case ElementType.Water: return ElementEffectiveness.NotEffective;
-                            default: return ElementEffectiveness.Normal;
-                    }
+                        ElementType.Normal => ElementEffectiveness.Effective,
+                        ElementType.Water => ElementEffectiveness.NotEffective,
+                        _ => ElementEffectiveness.Normal
+                    };
                 }
                 case ElementType.Water:
                 {
@@ -37,12 +37,12 @@ namespace SWE1_MTCG.Services
                 }
                 case ElementType.Normal:
                 {
-                    switch (element2)
+                    return element2 switch
                     {
-                        case ElementType.Water: return ElementEffectiveness.Effective;
-                        case ElementType.Fire: return ElementEffectiveness.NotEffective;
-                        default: return ElementEffectiveness.Normal;
-                    }
+                        ElementType.Water => ElementEffectiveness.Effective,
+                        ElementType.Fire => ElementEffectiveness.NotEffective,
+                        _ => ElementEffectiveness.Normal
+                    };
                 }
                 default: return ElementEffectiveness.Normal;
             }

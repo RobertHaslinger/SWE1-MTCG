@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SWE1_MTCG.Battle;
 using SWE1_MTCG.Interfaces;
 
 namespace SWE1_MTCG.Cards
@@ -63,6 +64,11 @@ namespace SWE1_MTCG.Cards
         public bool IsInDeck(Card card)
         {
             return _cards.Contains(card);
+        }
+
+        public BattleDeck GetBattleDeck()
+        {
+            return new BattleDeck(_cards);
         }
 
         #endregion

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using SWE1_MTCG.Battle;
 using SWE1_MTCG.Enums;
 using SWE1_MTCG.Services;
 
@@ -11,7 +13,7 @@ namespace SWE1_MTCG.Controller
 
         #region fields
         private IBattleService _battleService;
-        private List<Battle> _currentBattles = new List<Battle>();
+        private Dictionary<BattleBase, CancellationToken> _currentBattles = new Dictionary<BattleBase, CancellationToken>();
         #endregion
 
         #region properties
@@ -31,10 +33,11 @@ namespace SWE1_MTCG.Controller
 
         #region public methods
 
-        public bool StartBattle(Battle battle)
+        public bool StartBattle(BattleBase battle)
         {
-            _currentBattles.Add(battle);
-            //Do this in a new Task with a cancellation Token
+            CancellationToken cancellationToken= new CancellationTokenSource().Token;
+            _currentBattles.Add(battle, cancellationToken);
+            //Start new Task
             BattleResult battleResult = _battleService.StartBattle(battle.Player1, battle.Player2);
             bool finishedCorrectly = true;
 
@@ -62,7 +65,7 @@ namespace SWE1_MTCG.Controller
             return finishedCorrectly;
         }
 
-        public void CancelBattle()
+        public void CancelBattle(User involvedUser)
         {
             //Request to cancel the Task
             throw new NotImplementedException();

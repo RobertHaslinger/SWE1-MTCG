@@ -1,5 +1,6 @@
 ﻿using Moq;
 using NUnit.Framework;
+using SWE1_MTCG.Battle;
 using SWE1_MTCG.Controller;
 using SWE1_MTCG.Enums;
 using SWE1_MTCG.Services;
@@ -28,8 +29,8 @@ namespace SWE1_MTCG.Test
         {
             _battleServiceMock.Setup(s => s.StartBattle(_player1, _player2)).Returns(BattleResult.Cancelled);
 
-            _battleController.StartBattle(new Battle(_player1, _player2));
-            _battleController.CancelBattle();
+            _battleController.StartBattle(new BattleBase(_player1, _player2));
+            _battleController.CancelBattle(_player1);
 
             _battleServiceMock.Verify(s => s.CalculateAndApplyMmr(_player1, _player2), Times.Never);
         }
@@ -39,7 +40,7 @@ namespace SWE1_MTCG.Test
         {
             _battleServiceMock.Setup(s => s.StartBattle(_player1, _player2)).Returns(BattleResult.Draw);
 
-            _battleController.StartBattle(new Battle(_player1, _player2));
+            _battleController.StartBattle(new BattleBase(_player1, _player2));
 
             _battleServiceMock.Verify(s => s.CalculateAndApplyMmr(_player1, _player2), Times.Never);
         }
@@ -50,7 +51,7 @@ namespace SWE1_MTCG.Test
         {
             _battleServiceMock.Setup(s => s.StartBattle(_player1, _player2)).Returns(battleResult);
 
-            _battleController.StartBattle(new Battle(_player1, _player2));
+            _battleController.StartBattle(new BattleBase(_player1, _player2));
 
             if (battleResult == BattleResult.Player1Wins)
             {
