@@ -6,8 +6,4 @@
     <RootNamespace>SWE1_MTCG</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="ClassDiagrams\" />
-  </ItemGroup>
-
 </Project>
