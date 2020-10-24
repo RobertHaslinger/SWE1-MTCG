@@ -2,27 +2,28 @@
 using System.Collections.Generic;
 using System.Text;
 using SWE1_MTCG.Interfaces;
+using SWE1_MTCG.Server;
 
 namespace SWE1_MTCG.Api
 {
     public class MarketApi : IRestApi
     {
-        public string Get(object param)
+        public ResponseContext Get(object param)
         {
             throw new NotImplementedException();
         }
 
-        public string Post(object param)
+        public ResponseContext Post(object param)
         {
             throw new NotImplementedException();
         }
 
-        public string Put(object param)
+        public ResponseContext Put(object param)
         {
             throw new NotImplementedException();
         }
 
-        public string Delete(object param)
+        public ResponseContext Delete(object param)
         {
             throw new NotImplementedException();
         }

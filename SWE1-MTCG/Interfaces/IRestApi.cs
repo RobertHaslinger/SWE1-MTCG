@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using SWE1_MTCG.Enums;
+using SWE1_MTCG.Server;
 
 namespace SWE1_MTCG.Interfaces
 {
@@ -10,9 +11,9 @@ namespace SWE1_MTCG.Interfaces
     /// </summary>
     public interface IRestApi
     {
-        string Get(object param);
-        string Post(object param);
-        string Put(object param);
-        string Delete(object param);
+        ResponseContext Get(object param);
+        ResponseContext Post(object param);
+        ResponseContext Put(object param);
+        ResponseContext Delete(object param);
     }
 }
