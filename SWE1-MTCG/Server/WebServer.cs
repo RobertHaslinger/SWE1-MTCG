@@ -81,15 +81,14 @@ namespace SWE1_MTCG.Server
             RequestContext request;
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                int readCount = 0;
                 do
                 {
-                    readCount = networkStream.Read(_buffer, 0, _buffer.Length);
+                    int readCount = networkStream.Read(_buffer, 0, _buffer.Length);
                     memoryStream.Write(_buffer, 0, readCount);
                 } while (networkStream.DataAvailable);
                 request= new RequestContext(Encoding.ASCII.GetString(memoryStream.ToArray(), 0, (int)memoryStream.Length), _apiService);
             }
-            IRestApi restApi = _apiService.GetRequestedApi(request.RequestedResource);
+            IRestApi restApi = _apiService.GetRequestedApi(request.RequestedApi);
             ResponseContext response = request.HttpMethod switch
             {
                 HttpMethod.Get => restApi.Get(request),
@@ -97,6 +96,8 @@ namespace SWE1_MTCG.Server
                 HttpMethod.Put => restApi.Put(request),
                 HttpMethod.Delete => restApi.Delete(request)
             };
+
+            //TODO if response is null, return 404
 
             using StreamWriter writer= new StreamWriter(networkStream) {AutoFlush = true};
             writer.Write(response);

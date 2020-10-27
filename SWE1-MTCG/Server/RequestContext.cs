@@ -13,6 +13,7 @@ namespace SWE1_MTCG.Server
 
         public HttpMethod HttpMethod { get; private set; }
         public string HttpVersion { get; private set; }
+        public string RequestedApi { get; private set; }
         public string RequestedResource { get; private set; }
         public Dictionary<string, string> Headers { get; private set; }
         public string Payload { get; private set; }
@@ -22,7 +23,9 @@ namespace SWE1_MTCG.Server
         /// <summary>
         /// Base: https://www.regextester.com/1965. Modified to match for example /messages/all
         /// </summary>
-        private const string RequestedResourcePattern = "(http[s]?:\\/\\/)?[^\\s([\" <,>]*[\\.\\/][^\\s[\",><]*";
+        private const string FullResourcePattern = "(http[s]?:\\/\\/)?[^\\s([\" <,>]*[\\.\\/][^\\s[\",><]*";
+
+        private const string RequestedApiPattern = "(/\\w+){1}";
         private const string ValuesPattern = "((\\r\\n).+:.+)+(\\r\\n\\r\\n)";
         private const string PayloadPattern = "(\\r\\n\\r\\n)[^\\0]*";
 
@@ -32,13 +35,16 @@ namespace SWE1_MTCG.Server
             _apiService = apiService;
             Regex methodRegex = new Regex(MethodPattern);
             Regex headerRegex = new Regex(VersionPattern);
-            Regex requestedResourceRegex = new Regex(RequestedResourcePattern);
+            Regex fullResourceRegex = new Regex(FullResourcePattern);
             Regex valuesRegex = new Regex(ValuesPattern);
             Regex payloadRegex = new Regex(PayloadPattern);
+            Regex requestedApiRegex= new Regex(RequestedApiPattern);
 
             HttpMethod = _apiService.GetHttpMethod(methodRegex.Match(header).Value);
             HttpVersion = headerRegex.Match(header).Value;
-            RequestedResource = requestedResourceRegex.Match(header).Value;
+            string fullResource = fullResourceRegex.Match(header).Value;
+            RequestedApi = requestedApiRegex.Match(fullResource).Value;
+            RequestedResource = requestedApiRegex.Replace(fullResource, "", 1).TrimStart('/');
             Headers = new Dictionary<string, string>();
 
             string headerValuePairs = valuesRegex.Match(header).Value;

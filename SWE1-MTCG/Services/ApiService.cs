@@ -22,7 +22,8 @@ namespace SWE1_MTCG.Services
             {"/packages", () => new PackageApi()},
             {"/score", () => new RankingApi()},
             {"/stats", () => new StatisticApi()},
-            {"/sessions", () => new SessionApi()}
+            {"/sessions", () => new SessionApi()},
+            {"/messages", () => new MessageApi()}
         };
 
         private readonly Dictionary<string, HttpMethod> _httpMethodMap = new Dictionary<string, HttpMethod>()
