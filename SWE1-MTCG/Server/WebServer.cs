@@ -52,24 +52,43 @@ namespace SWE1_MTCG.Server
             }
         }
 
-        public async void StartServer()
+        public void StartServer()
         {
             Console.CancelKeyPress += (sender, e) => Environment.Exit(0);
 
             _server.Start();
+            Console.WriteLine("Server is running on {0}:{1}", _ipAddress, _port);
             _buffer= new byte[1024];
             while (true)
             {
-                object client = await _server.AcceptTcpClientAsync();
-                ThreadPool.QueueUserWorkItem(InteractWithClient, client);
+                try
+                {
+                    object client = _server.AcceptTcpClient();
+                    ThreadPool.QueueUserWorkItem(InteractWithClient, client);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
         }
 
         private void InteractWithClient(object obj)
         {
             TcpClient client = (TcpClient)obj;
-            using StreamReader reader= new StreamReader(client.GetStream());
-            RequestContext request= new RequestContext(reader.ReadToEnd(), _apiService);
+            NetworkStream networkStream = client.GetStream();
+            RequestContext request;
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                int readCount = 0;
+                do
+                {
+                    readCount = networkStream.Read(_buffer, 0, _buffer.Length);
+                    memoryStream.Write(_buffer, 0, readCount);
+                } while (networkStream.DataAvailable);
+                request= new RequestContext(Encoding.ASCII.GetString(memoryStream.ToArray(), 0, (int)memoryStream.Length), _apiService);
+            }
             IRestApi restApi = _apiService.GetRequestedApi(request.RequestedResource);
             ResponseContext response = request.HttpMethod switch
             {
@@ -79,7 +98,7 @@ namespace SWE1_MTCG.Server
                 HttpMethod.Delete => restApi.Delete(request)
             };
 
-            using StreamWriter writer= new StreamWriter(client.GetStream()) {AutoFlush = true};
+            using StreamWriter writer= new StreamWriter(networkStream) {AutoFlush = true};
             writer.Write(response);
         }
     }

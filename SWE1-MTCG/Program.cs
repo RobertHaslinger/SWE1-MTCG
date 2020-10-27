@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
+using SWE1_MTCG.Server;
+using SWE1_MTCG.Services;
 
 namespace SWE1_MTCG
 {
@@ -6,7 +9,9 @@ namespace SWE1_MTCG
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            ApiService apiService= new ApiService();
+            WebServer server= new WebServer(10001, apiService);
+            server.StartServer();
         }
     }
 }
