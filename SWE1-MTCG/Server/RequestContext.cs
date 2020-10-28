@@ -57,7 +57,7 @@ namespace SWE1_MTCG.Server
                 Headers.Add(valuePair[0], valuePair[1]);
             }
 
-            Payload = payloadRegex.Match(header).Value;
+            Payload = payloadRegex.Match(header).Value.TrimStart();
         }
 
         public override string ToString()

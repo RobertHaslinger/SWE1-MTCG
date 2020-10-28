@@ -10,6 +10,7 @@ namespace SWE1_MTCG.Services
     {
         //Get the execution dir of the application to store messages in this dir
         private readonly string _basePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        //private readonly string _basePath = Path.GetFullPath("E:\\Technikum\\SWE1\\MTCG");
         private readonly string _messageDirPath;
         private readonly string _indexDirPath;
         private readonly string _indexPath;
@@ -18,16 +19,20 @@ namespace SWE1_MTCG.Services
         public FileService()
         {
             _messageDirPath = _basePath + "\\messages";
-            _indexDirPath = _basePath + "\\indices";
+            _indexDirPath = _messageDirPath + "\\indices";
             _indexPath = _indexDirPath + "\\nextIndex.txt";
             _bannedIndexPath = _indexDirPath + "\\bannedIndices.txt";
+
+            CheckDir(_indexDirPath);
+            CheckFile(_indexPath);
+            CheckFile(_bannedIndexPath);
         }
 
         private bool CheckDir(string path)
         {
-            if (!Directory.Exists(path))
+            if (!Directory.Exists(Path.GetFullPath(path)))
             {
-                Directory.CreateDirectory(path);
+                Directory.CreateDirectory(Path.GetFullPath(path));
             }
 
             return true;
@@ -45,15 +50,15 @@ namespace SWE1_MTCG.Services
 
         private int GetNextFreeIndex()
         {
-            CheckDir(_indexDirPath);
-            CheckFile(_indexPath);
-            CheckFile(_bannedIndexPath);
-
-            int index;
+            int index=0;
             string[] bannedIndices = File.ReadAllText(_bannedIndexPath).Split(',');
             do
             {
-                index = Convert.ToInt32(File.ReadAllText(_indexPath));
+                string fileContent = File.ReadAllText(_indexPath);
+                if (!string.IsNullOrWhiteSpace(fileContent))
+                {
+                    index = Convert.ToInt32(fileContent);
+                }
                 File.WriteAllText(_indexPath, (index + 1).ToString());
             } while (bannedIndices.Contains(index.ToString()));
 
@@ -82,7 +87,7 @@ namespace SWE1_MTCG.Services
         public string GetFileContent(int id)
         {
             string content;
-            content= File.ReadAllText($"{_messageDirPath}\\{id}");
+            content= File.ReadAllText($"{_messageDirPath}\\{id}.txt");
 
             return content;
         }
@@ -93,7 +98,7 @@ namespace SWE1_MTCG.Services
             string[] fileNames = Directory.GetFiles(_messageDirPath);
             foreach (string fileName in fileNames)
             {
-                contents.Add(File.ReadAllText($"{_messageDirPath}\\{fileName}"));
+                contents.Add(File.ReadAllText(Path.GetFullPath(fileName)));
             }
 
             return contents;
@@ -101,7 +106,7 @@ namespace SWE1_MTCG.Services
 
         public void DeleteFile(int id)
         {
-            File.Delete($"{_messageDirPath}\\{id}");
+            File.Delete($"{_messageDirPath}\\{id}.txt");
         }
     }
 }

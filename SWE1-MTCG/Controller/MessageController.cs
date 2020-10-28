@@ -18,6 +18,7 @@ namespace SWE1_MTCG.Controller
 
         private KeyValuePair<StatusCode, object> HandleFileException(Exception ex)
         {
+            Console.WriteLine(ex.Message);
             switch (ex)
             {
                 case UnauthorizedAccessException _:
@@ -63,7 +64,7 @@ namespace SWE1_MTCG.Controller
             try
             {
                 List<string> contents = _fileService.GetAllFileContents();
-                response= new KeyValuePair<StatusCode, object>(StatusCode.OK, contents);
+                response= new KeyValuePair<StatusCode, object>(StatusCode.OK, string.Join("\r\n", contents.ToArray()));
             }
             catch (Exception ex)
             {

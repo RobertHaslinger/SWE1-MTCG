@@ -88,19 +88,25 @@ namespace SWE1_MTCG.Server
                 } while (networkStream.DataAvailable);
                 request= new RequestContext(Encoding.ASCII.GetString(memoryStream.ToArray(), 0, (int)memoryStream.Length), _apiService);
             }
-            IRestApi restApi = _apiService.GetRequestedApi(request.RequestedApi);
-            ResponseContext response = request.HttpMethod switch
+            try
             {
-                HttpMethod.Get => restApi.Get(request),
-                HttpMethod.Post => restApi.Post(request),
-                HttpMethod.Put => restApi.Put(request),
-                HttpMethod.Delete => restApi.Delete(request)
-            };
+                IRestApi restApi = _apiService.GetRequestedApi(request.RequestedApi);
+                ResponseContext response = request.HttpMethod switch
+                {
+                    HttpMethod.Get => restApi.Get(request),
+                    HttpMethod.Post => restApi.Post(request),
+                    HttpMethod.Put => restApi.Put(request),
+                    HttpMethod.Delete => restApi.Delete(request)
+                };
 
-            //TODO if response is null, return 404
-
-            using StreamWriter writer= new StreamWriter(networkStream) {AutoFlush = true};
-            writer.Write(response);
+                using StreamWriter writer = new StreamWriter(networkStream) { AutoFlush = true };
+                client.Client.Send(Encoding.ASCII.GetBytes(response.ToString()));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
         }
     }
 }
