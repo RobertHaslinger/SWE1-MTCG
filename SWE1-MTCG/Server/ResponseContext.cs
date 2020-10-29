@@ -41,8 +41,10 @@ namespace SWE1_MTCG.Server
         /// <returns></returns>
         public override string ToString()
         {
-            return Headers["Response"]+"\r\n"+string.Join("\r\n", Headers.Select(x => string.Format("{0}: {1}", x.Key, x.Value).ToArray())+
-                "\r\n"+Content);
+            string escapedHeaders = string.Join("\r\n",
+                Headers.Select(x => $"{x.Key}: {x.Value}").ToArray());
+            return Headers["Response"]+"\r\n"+escapedHeaders+
+                "\r\n\r\n"+Content;
         }
     }
 }

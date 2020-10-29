@@ -100,6 +100,7 @@ namespace SWE1_MTCG.Server
                 };
 
                 using StreamWriter writer = new StreamWriter(networkStream) { AutoFlush = true };
+                string test = response.ToString();
                 client.Client.Send(Encoding.ASCII.GetBytes(response.ToString()));
             }
             catch (Exception ex)
