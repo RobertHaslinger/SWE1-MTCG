@@ -7,6 +7,9 @@ using SWE1_MTCG.Services;
 
 namespace SWE1_MTCG.Server
 {
+    /// <summary>
+    /// I found the Regex patterns here: https://www.google.com/search?q=cat+keyboard+gif&sxsrf=ALeKk01pgwWNx0L8RrT3n4mzgSudgc9K6Q:1603974510220&tbm=isch&source=iu&ictx=1&fir=zXl3YAU62uJkwM%252Cx4ryeLiJmrIWyM%252C_&vet=1&usg=AI4_-kSgKsMnGEJcshbXtQ6uSg08e4jZBQ&sa=X&ved=2ahUKEwii0aPX5tnsAhUB66QKHR5dAaAQ9QF6BAgDECE&biw=1920&bih=937#imgrc=zXl3YAU62uJkwM
+    /// </summary>
     public class RequestContext
     {
         private IApiService _apiService;
