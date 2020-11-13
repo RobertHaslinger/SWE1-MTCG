@@ -45,7 +45,7 @@ namespace SWE1_MTCG.Services
         public IRestApi GetRequestedApi(string requestedResource)
         {
             Regex apiRegex= new Regex("(/\\w+){1}");
-            string requestedApi = apiRegex.Match(requestedResource).Value;
+            string requestedApi = apiRegex.Match(requestedResource).Value.TrimEnd('/');
             if (_restApiMap.ContainsKey(requestedApi))
             {
                 return _restApiMap[requestedApi].Invoke();

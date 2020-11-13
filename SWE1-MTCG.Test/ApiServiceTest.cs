@@ -11,25 +11,23 @@ using SWE1_MTCG.Test.TestCaseData;
 namespace SWE1_MTCG.Test
 {
     [TestFixture]
-    public class WebServerTest
+    public class ApiServiceTest
     {
-        private WebServer _server;
         private IApiService _apiService;
 
         [SetUp]
         public void SetUp()
         {
             _apiService = new ApiService();
-            _server= new WebServer(IPAddress.Loopback, 10001, _apiService);
         }
 
-        [Test, TestCaseSource(typeof(WebServerTestCaseData), nameof(WebServerTestCaseData.TestCases))]
+        [Test, TestCaseSource(typeof(ApiServiceTestCaseData), nameof(ApiServiceTestCaseData.TestCases))]
         public Type Test_ApiServiceReturnsExpectedRestApiFromRequest(string requestedApi)
         {
             return _apiService.GetRequestedApi(requestedApi).GetType();
         }
 
-        [Test, TestCaseSource(typeof(WebServerTestCaseData), nameof(WebServerTestCaseData.ExceptionalTestCases))]
+        [Test, TestCaseSource(typeof(ApiServiceTestCaseData), nameof(ApiServiceTestCaseData.ExceptionalTestCases))]
         public void Test_ApiServiceShouldThrowExceptionIfNoValidRequestedApi(string requestedApi)
         {
             Assert.Throws(typeof(KeyNotFoundException), () => _apiService.GetRequestedApi(requestedApi));

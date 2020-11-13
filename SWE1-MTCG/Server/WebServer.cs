@@ -90,17 +90,27 @@ namespace SWE1_MTCG.Server
             }
             try
             {
-                IRestApi restApi = _apiService.GetRequestedApi(request.RequestedApi);
-                ResponseContext response = request.HttpMethod switch
+                ResponseContext response;
+                try
                 {
-                    HttpMethod.Get => restApi.Get(request),
-                    HttpMethod.Post => restApi.Post(request),
-                    HttpMethod.Put => restApi.Put(request),
-                    HttpMethod.Delete => restApi.Delete(request)
-                };
+                    IRestApi restApi = _apiService.GetRequestedApi(request.RequestedApi);
+                    response = request.HttpMethod switch
+                    {
+                        HttpMethod.Get => restApi.Get(request),
+                        HttpMethod.Post => restApi.Post(request),
+                        HttpMethod.Put => restApi.Put(request),
+                        HttpMethod.Delete => restApi.Delete(request),
+                        HttpMethod.Unrecognized => new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.NotImplemented,
+                            "The Server either does not recognize the request method, or it lacks the ability to fulfill the request."))
+                    };
+                }
+                catch (KeyNotFoundException e)
+                {
+                    response = new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.NotFound,
+                        $"The requested URL {request.RequestedApi} was not found on this server."));
+                }
 
                 using StreamWriter writer = new StreamWriter(networkStream) { AutoFlush = true };
-                string test = response.ToString();
                 client.Client.Send(Encoding.ASCII.GetBytes(response.ToString()));
             }
             catch (Exception ex)

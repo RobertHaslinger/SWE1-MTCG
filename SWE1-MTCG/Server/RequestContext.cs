@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using SWE1_MTCG.Enums;
@@ -43,7 +44,14 @@ namespace SWE1_MTCG.Server
             Regex payloadRegex = new Regex(PayloadPattern);
             Regex requestedApiRegex= new Regex(RequestedApiPattern);
 
-            HttpMethod = _apiService.GetHttpMethod(methodRegex.Match(header).Value);
+            try
+            {
+                HttpMethod = _apiService.GetHttpMethod(methodRegex.Match(header).Value);
+            }
+            catch (KeyNotFoundException e)
+            {
+                HttpMethod = HttpMethod.Unrecognized;
+            }
             HttpVersion = headerRegex.Match(header).Value;
             string fullResource = fullResourceRegex.Match(header).Value;
             RequestedApi = requestedApiRegex.Match(fullResource).Value;
@@ -61,11 +69,15 @@ namespace SWE1_MTCG.Server
             }
 
             Payload = payloadRegex.Match(header).Value.TrimStart();
+            Console.WriteLine(this);
         }
 
         public override string ToString()
         {
-            throw new System.NotImplementedException();
+            return
+                $"{Enum.GetName(typeof(HttpMethod), HttpMethod)} {RequestedApi}/{RequestedResource} {HttpVersion}\r\n" +
+                string.Join("\r\n", Headers.Select(h => $"{h.Key}:{h.Value}").ToArray()) +
+                $"\r\n\r\n{Payload}";
         }
     }
 }

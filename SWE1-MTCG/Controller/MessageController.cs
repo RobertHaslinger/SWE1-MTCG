@@ -29,7 +29,6 @@ namespace SWE1_MTCG.Controller
                     return new KeyValuePair<StatusCode, object>(StatusCode.BadRequest, "");
                 case PathTooLongException _:
                 case IOException _:
-                    return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, "");
                 default:
                     return new KeyValuePair<StatusCode, object>(StatusCode.NotFound, "");
             }

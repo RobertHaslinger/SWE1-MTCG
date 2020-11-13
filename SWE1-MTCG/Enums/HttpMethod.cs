@@ -9,6 +9,7 @@ namespace SWE1_MTCG.Enums
         Get,
         Post,
         Put,
-        Delete
+        Delete,
+        Unrecognized
     }
 }
