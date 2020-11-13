@@ -1,129 +1,166 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="SWE1_MTCG.Api.BattleApi" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="4.75" Y="6" Width="1.5" />
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="SWE1_MTCG.Api.BattleApi" BaseTypeListCollapsed="true">
+    <Position X="10.75" Y="4.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Api\BattleApi.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SWE1_MTCG.Api.CardApi" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10" Y="5" Width="1.5" />
+  <Class Name="SWE1_MTCG.Api.CardApi" BaseTypeListCollapsed="true">
+    <Position X="10.75" Y="2.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Api\CardApi.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SWE1_MTCG.Api.DeckApi" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="8.25" Y="5" Width="1.5" />
+  <Class Name="SWE1_MTCG.Api.DeckApi" BaseTypeListCollapsed="true">
+    <Position X="19" Y="2.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Api\DeckApi.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SWE1_MTCG.Api.MarketApi" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="4.75" Y="4" Width="1.5" />
+  <Class Name="SWE1_MTCG.Api.MarketApi" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="4.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Api\MarketApi.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SWE1_MTCG.Api.PackageApi" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="8.25" Y="4" Width="1.5" />
+  <Class Name="SWE1_MTCG.Api.MessageApi" BaseTypeListCollapsed="true">
+    <Position X="21.75" Y="3.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAECAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Api\MessageApi.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SWE1_MTCG.Api.PackageApi" BaseTypeListCollapsed="true">
+    <Position X="16.25" Y="2.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Api\PackageApi.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SWE1_MTCG.Api.RankingApi" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="6.5" Y="5" Width="1.5" />
+  <Class Name="SWE1_MTCG.Api.RankingApi" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="2.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Api\RankingApi.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SWE1_MTCG.Api.SessionApi" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10" Y="4" Width="1.5" />
+  <Class Name="SWE1_MTCG.Api.SessionApi" BaseTypeListCollapsed="true">
+    <Position X="19" Y="4.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Api\SessionApi.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SWE1_MTCG.Api.StatisticApi" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="4.75" Y="5" Width="1.5" />
+  <Class Name="SWE1_MTCG.Api.StatisticApi" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="2.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Api\StatisticApi.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SWE1_MTCG.Api.UserApi" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="6.5" Y="4" Width="1.5" />
+  <Class Name="SWE1_MTCG.Api.UserApi" BaseTypeListCollapsed="true">
+    <Position X="16.25" Y="4.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Api\UserApi.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SWE1_MTCG.Server.RequestContext">
-    <Position X="0.5" Y="1.75" Width="1.5" />
+  <Class Name="SWE1_MTCG.Controller.MessageController">
+    <Position X="25.25" Y="3.5" Width="4" />
     <TypeIdentifier>
-      <HashCode>AAAAAACAAAAAAAAEAIAQAAAACAAAAAAAAAAAAAQAAAA=</HashCode>
+      <HashCode>AAAACAAAAAAAIAAAAAAAAAAAAAAEAAAAAAUACAgAAAA=</HashCode>
+      <FileName>Controller\MessageController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE1_MTCG.Server.RequestContext">
+    <Position X="10.5" Y="7.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAACAAIAAAAAEIYBQAAAACICAAAAAAABAAAQAAAA=</HashCode>
       <FileName>Server\RequestContext.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SWE1_MTCG.Server.ResponseContext">
-    <Position X="0.5" Y="4.75" Width="1.5" />
+    <Position X="7.25" Y="7.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAABAAAAACAAAAAAAIAAAAEAACAA=</HashCode>
+      <HashCode>AAAAAAAAAgAAAAAEAABAAAAACAAAAAAAIAAAAEAACAA=</HashCode>
       <FileName>Server\ResponseContext.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SWE1_MTCG.Server.WebServer">
-    <Position X="12" Y="1.75" Width="2.25" />
+    <Position X="13.75" Y="7.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAACAAgAAAAAgggQAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAACAAgAAAAAgggQAAAAAAAAAAAABAAAABAAAAAAAA=</HashCode>
       <FileName>Server\WebServer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SWE1_MTCG.Services.ApiService" BaseTypeListCollapsed="true">
-    <Position X="2.5" Y="3.5" Width="1.75" />
+    <Position X="0.5" Y="2.5" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAAAAACAAAAAAgAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>Services\ApiService.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.833" />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SWE1_MTCG.Services.FileService" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="2.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgQAAAAAAAIAAAAAAAQAEAQAAAAAAAEAEEAAAAAQI=</HashCode>
+      <FileName>Services\FileService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SWE1_MTCG.Program">
+    <Position X="16.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="SWE1_MTCG.Interfaces.IRestApi">
-    <Position X="7.25" Y="1.75" Width="1.5" />
+    <Position X="15.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Interfaces\IRestApi.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="SWE1_MTCG.Services.IApiService">
-    <Position X="2.75" Y="1.75" Width="1.5" />
+    <Position X="0.5" Y="0.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAACAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Services\IApiService.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Enum Name="SWE1_MTCG.Enums.HttpMethod">
-    <Position X="12" Y="4.75" Width="1.5" />
+  <Interface Name="SWE1_MTCG.Services.IFileService">
+    <Position X="4.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAABAAAAAAAAACAEAAAAAAAAAAAAAAAg=</HashCode>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAQAAAAAAAAAAAEAEAAAAAAAA=</HashCode>
+      <FileName>Services\IFileService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="SWE1_MTCG.Enums.HttpMethod">
+    <Position X="0.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAiAEAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Enums\HttpMethod.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="SWE1_MTCG.Enums.StatusCode">
-    <Position X="14" Y="4.75" Width="1.5" />
+    <Position X="2.25" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AEEASAAIAAAAAgAgACEAAAAAAIEAAAQAACABAAAGAAA=</HashCode>
       <FileName>Enums\StatusCode.cs</FileName>
