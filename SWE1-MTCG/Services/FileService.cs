@@ -106,6 +106,8 @@ namespace SWE1_MTCG.Services
 
         public void DeleteFile(int id)
         {
+            if (!File.Exists($"{_messageDirPath}\\{id}.txt"))
+                throw new IOException("No such file");
             File.Delete($"{_messageDirPath}\\{id}.txt");
         }
     }

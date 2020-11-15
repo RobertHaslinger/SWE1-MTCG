@@ -23,7 +23,7 @@ namespace SWE1_MTCG.Test
         }
 
         [Test]
-        public void ControllerReturnsNotFoundResponseIfNoMessageWasFound()
+        public void Test_ControllerReturnsNotFoundResponseIfNoMessageWasFound()
         {
             _fileServiceMock.Setup(s => s.GetFileContent(5)).Throws(new FileNotFoundException());
 
@@ -33,7 +33,7 @@ namespace SWE1_MTCG.Test
         }
 
         [Test]
-        public void ControllerReturnsUnauthorizedResponseIfMessageCouldNotBeAccessed()
+        public void Test_ControllerReturnsUnauthorizedResponseIfMessageCouldNotBeAccessed()
         {
             _fileServiceMock.Setup(s => s.DeleteFile(5)).Throws(new UnauthorizedAccessException());
 
@@ -43,7 +43,7 @@ namespace SWE1_MTCG.Test
         }
 
         [Test]
-        public void ControllerReturnsBadRequestResponseIfMessageIdIsBad()
+        public void Test_ControllerReturnsBadRequestResponseIfMessageIdIsBad()
         {
             _fileServiceMock.Setup(s => s.GetFileContent(5)).Throws(new ArgumentException());
 
@@ -53,7 +53,7 @@ namespace SWE1_MTCG.Test
         }
 
         [Test]
-        public void ControllerReturnsOkResponseIfMessageWasFound()
+        public void Test_ControllerReturnsOkResponseIfMessageWasFound()
         {
             _fileServiceMock.Setup(s => s.GetFileContent(5)).Returns("Test content");
 

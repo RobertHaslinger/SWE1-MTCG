@@ -5,6 +5,7 @@
     <RootNamespace>SWE1_MTCG.Test</RootNamespace>
 
     <IsPackable>false</IsPackable>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
