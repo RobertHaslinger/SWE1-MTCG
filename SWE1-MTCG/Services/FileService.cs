@@ -10,7 +10,6 @@ namespace SWE1_MTCG.Services
     {
         //Get the execution dir of the application to store messages in this dir
         private readonly string _basePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-        //private readonly string _basePath = Path.GetFullPath("E:\\Technikum\\SWE1\\MTCG");
         private readonly string _messageDirPath;
         private readonly string _indexDirPath;
         private readonly string _indexPath;
@@ -42,7 +41,7 @@ namespace SWE1_MTCG.Services
         {
             if (!File.Exists(path))
             {
-                File.Create(path);
+                File.Create(path).Close();
             }
 
             return true;
