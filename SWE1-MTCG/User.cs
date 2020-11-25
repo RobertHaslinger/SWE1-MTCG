@@ -12,13 +12,14 @@ namespace SWE1_MTCG
     public class User
     {
         #region fields
-        private string _credentials;
+        
         private Stack<Package> _currentUnopenedPackages = new Stack<Package>();
         #endregion
 
         #region properties
 
-        public string Username { get; }
+        public string Username { get; init; }
+        public string Credentials { get; init; }
         public int Coins { get; private set; } = 0;
         public Deck Deck { get; set; } = new Deck();
         public CardStack Stack { get; set; } = new CardStack();
@@ -31,7 +32,7 @@ namespace SWE1_MTCG
         public User(string username, string password)
         {
             Username = username;
-            _credentials = $"{username}:{Hash(password)}";
+            Credentials = $"{username}:{Hash(password)}";
         }
 
         #endregion
