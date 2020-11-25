@@ -29,7 +29,7 @@ namespace SWE1_MTCG.Test
             string[] credentials = user.Credentials.Split(':', 2);
             int affectedRows;
 
-            using (NpgsqlCommand insertCommand = new NpgsqlCommand(PostgreSQLCommands.InsertUserCommand, _dbConnection))
+            using (NpgsqlCommand insertCommand = new NpgsqlCommand(PostgreSQLTestCommands.InsertUserCommand, _dbConnection))
             {
                 insertCommand.Parameters.Add("username", NpgsqlDbType.Varchar).Value=credentials[0];
                 insertCommand.Parameters.Add("password", NpgsqlDbType.Bytea).Value= Encoding.UTF8.GetBytes(credentials[1]);
@@ -47,7 +47,7 @@ namespace SWE1_MTCG.Test
             User returnedUser = null;
             string[] credentials = user.Credentials.Split(':', 2);
 
-            using (NpgsqlCommand readCommand = new NpgsqlCommand(PostgreSQLCommands.ReadUserCommand, _dbConnection))
+            using (NpgsqlCommand readCommand = new NpgsqlCommand(PostgreSQLTestCommands.ReadUserCommand, _dbConnection))
             {
                 readCommand.Parameters.Add("username", NpgsqlDbType.Varchar).Value = credentials[0];
                 readCommand.Parameters.Add("password", NpgsqlDbType.Bytea).Value = Encoding.UTF8.GetBytes(credentials[1]);
@@ -77,7 +77,7 @@ namespace SWE1_MTCG.Test
             string[] credentials = user.Credentials.Split(':', 2);
             int affectedRows;
 
-            using (NpgsqlCommand deleteCommand = new NpgsqlCommand(PostgreSQLCommands.DeleteUserCommand, _dbConnection))
+            using (NpgsqlCommand deleteCommand = new NpgsqlCommand(PostgreSQLTestCommands.DeleteUserCommand, _dbConnection))
             {
                 deleteCommand.Parameters.Add("username", NpgsqlDbType.Varchar).Value = credentials[0];
                 deleteCommand.Parameters.Add("password", NpgsqlDbType.Bytea).Value = Encoding.UTF8.GetBytes(credentials[1]);
@@ -94,5 +94,25 @@ namespace SWE1_MTCG.Test
 
             _dbConnection.Close();
         }
+    }
+
+    public static class PostgreSQLTestCommands
+    {
+        /// <summary>
+        /// Parameters: @username, @password
+        /// </summary>
+        public static string InsertUserCommand => "INSERT INTO mtcg.\"User\"(\"Username\", \"Password_Hash\") " +
+                                                  "VALUES(@username, @password)";
+
+        /// <summary>
+        /// Parameters: @username, @password
+        /// </summary>
+        public static string ReadUserCommand => "SELECT * FROM mtcg.\"User\"" +
+                                                "WHERE \"Username\"=@username AND \"Password_Hash\"=@password";
+        /// <summary>
+        /// Parameters: @username, @password
+        /// </summary>
+        public static string DeleteUserCommand => "DELETE FROM mtcg.\"User\"" +
+                                                  "WHERE \"Username\"=@username AND \"Password_Hash\"=@password";
     }
 }
