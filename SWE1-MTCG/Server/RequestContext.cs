@@ -65,7 +65,7 @@ namespace SWE1_MTCG.Server
                 if (string.IsNullOrWhiteSpace(headerValue)) continue;
 
                 string[] valuePair = headerValue.Split(':');
-                Headers.Add(valuePair[0], valuePair[1]);
+                Headers.Add(valuePair[0].Trim(), valuePair[1].Trim());
             }
 
             Payload = payloadRegex.Match(header).Value.TrimStart();

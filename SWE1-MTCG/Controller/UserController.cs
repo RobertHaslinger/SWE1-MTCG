@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
+using Npgsql;
 using SWE1_MTCG.Cards;
+using SWE1_MTCG.Enums;
 using SWE1_MTCG.Services;
 
 namespace SWE1_MTCG.Controller
@@ -15,11 +18,6 @@ namespace SWE1_MTCG.Controller
 
         #endregion
 
-        #region properties
-
-        public  User User { get; private set; }
-        #endregion
-
         #region constructor
 
         public UserController(IUserService userService)
@@ -30,6 +28,30 @@ namespace SWE1_MTCG.Controller
 
         #region private methods
 
+        /// <summary>
+        /// PostgreSQL Error Codes: https://www.postgresql.org/docs/current/errcodes-appendix.html
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        private KeyValuePair<StatusCode, object> HandleException(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            
+            if (ex is NpgsqlException)
+            {
+                return ((NpgsqlException) ex).SqlState switch
+                {
+                    { } state when state.StartsWith("02") => new KeyValuePair<StatusCode, object>(StatusCode.BadRequest, null),
+                    { } state when state.StartsWith("08") => new KeyValuePair<StatusCode, object>(StatusCode.NotFound, null),
+                    { } state when state.StartsWith("0A") => new KeyValuePair<StatusCode, object>(StatusCode.NotImplemented, null),
+                    { } state when state.StartsWith("23") => new KeyValuePair<StatusCode, object>(StatusCode.Conflict, null),
+                    _ => new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, null)
+                };
+            }
+
+            return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, null);
+        }
+
         private bool HasEnoughCoins(int coins, int price)
         {
             return coins >= price;
@@ -38,39 +60,52 @@ namespace SWE1_MTCG.Controller
 
         #region public methods
 
-        public void Register(string username, string password)
+        public KeyValuePair<StatusCode, object> Register(string username, string password)
         {
             User user = new User(username, password);
-            _userService.Register(user);
+            try
+            {
+                _userService.Register(user);
+                return new KeyValuePair<StatusCode, object>(StatusCode.Created, user);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
+        public KeyValuePair<StatusCode, object> Login(User user)
+        {
+            try
+            {
+                if (_userService.IsRegistered(user))
+                {
+                    return new KeyValuePair<StatusCode, object>(StatusCode.OK, _userService.Login(user));
+                }
+                
+                return new KeyValuePair<StatusCode, object>(StatusCode.NotFound, null);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        //TODO work with /transactions --> Inject UserServiceWithTransactions
+        public bool AcquirePackage(User user)
+        {
+            if (user == null) return false;
+
+            int packagePrice = _userService.GetPackagePrice();
+            if (!HasEnoughCoins(user.Coins, packagePrice)) return false;
+            Package package = _userService.AcquirePackage();
+            user.AddPackage(package);
+            user.RemoveCoins(packagePrice);
+            return true;
+
+        }
 
         #endregion
 
-        public bool Login(User user)
-        {
-            if (_userService.IsRegistered(user))
-            {
-                User = _userService.Login(user);
-            }
-
-            return User != null;
-        }
-
-        public bool AcquirePackage()
-        {
-            if (User == null) return false;
-
-            int packagePrice = _userService.GetPackagePrice();
-            if (HasEnoughCoins(User.Coins, packagePrice))
-            {
-                Package package = _userService.AcquirePackage();
-                User.AddPackage(package);
-                User.RemoveCoins(packagePrice);
-                return true;
-            }
-
-            return false;
-        }
     }
 }

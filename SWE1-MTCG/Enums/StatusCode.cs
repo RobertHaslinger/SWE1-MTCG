@@ -22,6 +22,8 @@ namespace SWE1_MTCG.Enums
         Forbidden = 403,
         NotFound = 404,
         RequestTimeout = 408,
+        Conflict = 409,
+        UnsupportedMediaType = 415,
         InternalServerError = 500,
         NotImplemented = 501,
         ServiceUnavailable = 503

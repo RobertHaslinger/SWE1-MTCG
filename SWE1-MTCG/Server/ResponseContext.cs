@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using SWE1_MTCG.Enums;
 
 namespace SWE1_MTCG.Server
@@ -19,12 +20,12 @@ namespace SWE1_MTCG.Server
             RequestUrl = $"{request.RequestedApi}/{request.RequestedResource}";
             RequestMethod = request.HttpMethod;
             StatusCode = keyValuePair.Key;
-            Content = keyValuePair.Value.ToString();
+            Content = JsonSerializer.Serialize(keyValuePair.Value);
             AddHeader("Response", $"{request.HttpVersion} {(int)StatusCode} {Enum.GetName(typeof(StatusCode), StatusCode)}");
-            AddHeader("Server", "Robert Haslingers Web Server");
+            AddHeader("Server", "Robert Haslingers MTCG Web Server");
             AddHeader("Date", DateTime.Now.ToString());
             AddHeader("Cache-Control", "no-cache");
-            AddHeader("Content-Type", "text/plain");
+            AddHeader("Content-Type", "application/json");
             AddHeader("Content-Length", Content.Length.ToString());
         }
 

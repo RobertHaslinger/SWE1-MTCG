@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using SWE1_MTCG.Database;
 using SWE1_MTCG.Enums;
 using SWE1_MTCG.Interfaces;
 using SWE1_MTCG.Services;
@@ -54,9 +58,15 @@ namespace SWE1_MTCG.Server
 
         public void StartServer()
         {
-            Console.CancelKeyPress += (sender, e) => Environment.Exit(0);
+            Console.CancelKeyPress += (sender, e) =>
+            {
+                PostgreSQLSingleton.GetInstance.Connection.Close();
+                Environment.Exit(0);
+            };
 
             _server.Start();
+            //TODO execute script that starts database automatically
+            PostgreSQLSingleton.GetInstance.Connection.Open();
             Console.WriteLine("Server is running on {0}:{1}", _ipAddress, _port);
             _buffer= new byte[1024];
             while (true)
@@ -93,21 +103,34 @@ namespace SWE1_MTCG.Server
                 ResponseContext response;
                 try
                 {
+                    string token =
+                        request.Headers.ContainsKey("Authorization") &&
+                        request.Headers["Authorization"].Contains("Basic")
+                            ? request.Headers["Authorization"][6..]
+                            : string.Empty; 
+
                     IRestApi restApi = _apiService.GetRequestedApi(request.RequestedApi);
+
                     response = request.HttpMethod switch
                     {
                         HttpMethod.Get => restApi.Get(request),
                         HttpMethod.Post => restApi.Post(request),
                         HttpMethod.Put => restApi.Put(request),
                         HttpMethod.Delete => restApi.Delete(request),
-                        HttpMethod.Unrecognized => new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.NotImplemented,
+                        HttpMethod.Unrecognized => new ResponseContext(request, new KeyValuePair<StatusCode, object>(
+                            StatusCode.NotImplemented,
                             "The Server either does not recognize the request method, or it lacks the ability to fulfill the request."))
                     };
                 }
-                catch (KeyNotFoundException e)
+                catch (KeyNotFoundException)
                 {
                     response = new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.NotFound,
                         $"The requested URL {request.RequestedApi} was not found on this server."));
+                }
+                catch (NotImplementedException)
+                {
+                    response = new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.NotImplemented,
+                        $"The requested service {Enum.GetName(typeof(HttpMethod), request.HttpMethod)} {request.RequestedApi} has not yet been implemented on this server."));
                 }
 
                 using StreamWriter writer = new StreamWriter(networkStream) { AutoFlush = true };

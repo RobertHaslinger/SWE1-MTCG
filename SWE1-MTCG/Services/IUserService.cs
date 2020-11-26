@@ -9,8 +9,8 @@ namespace SWE1_MTCG.Services
     public interface IUserService
     {
         bool IsRegistered(User user);
-        void Register(User user);
-        User Login(User user);
+        bool Register(User user);
+        MtcgClient Login(User user);
         Package AcquirePackage();
         int GetPackagePrice();
         Task QueueForBattle();
