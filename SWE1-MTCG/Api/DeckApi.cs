@@ -8,22 +8,24 @@ namespace SWE1_MTCG.Api
 {
     public class DeckApi : IRestApi
     {
-        public ResponseContext Get(object param)
+        public bool AllowAnonymous => false;
+
+        public ResponseContext Get(Dictionary<string, object> param)
         {
             throw new NotImplementedException();
         }
 
-        public ResponseContext Post(object param)
+        public ResponseContext Post(Dictionary<string, object> param)
         {
             throw new NotImplementedException();
         }
 
-        public ResponseContext Put(object param)
+        public ResponseContext Put(Dictionary<string, object> param)
         {
             throw new NotImplementedException();
         }
 
-        public ResponseContext Delete(object param)
+        public ResponseContext Delete(Dictionary<string, object> param)
         {
             throw new NotImplementedException();
         }

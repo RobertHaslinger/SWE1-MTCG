@@ -5,6 +5,7 @@ using System.Text.Json;
 using Npgsql;
 using SWE1_MTCG.Cards;
 using SWE1_MTCG.Enums;
+using SWE1_MTCG.Server;
 using SWE1_MTCG.Services;
 
 namespace SWE1_MTCG.Controller
@@ -80,7 +81,13 @@ namespace SWE1_MTCG.Controller
             {
                 if (_userService.IsRegistered(user))
                 {
-                    return new KeyValuePair<StatusCode, object>(StatusCode.OK, _userService.Login(user));
+                    MtcgClient client;
+                    if ((client = _userService.Login(user)) !=null)
+                    {
+                        ClientMapSingleton.GetInstance.ClientMap.AddOrUpdate(client.SessionToken, client,
+                            (key, oldValue) => client);
+                    }
+                    return new KeyValuePair<StatusCode, object>(StatusCode.OK, client);
                 }
                 
                 return new KeyValuePair<StatusCode, object>(StatusCode.NotFound, null);

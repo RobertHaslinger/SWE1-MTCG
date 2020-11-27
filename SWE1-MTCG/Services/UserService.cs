@@ -26,13 +26,7 @@ namespace SWE1_MTCG.Services
                 {
                     if (reader.Read())
                     {
-                        var values = new object[reader.FieldCount];
-                        int instances = reader.GetValues(values);
-                        if (instances > 0)
-                        {
-                            //double checking
-                            return credentials[0] == values[1].ToString() && credentials[1] == values[2].ToString();
-                        }
+                            return credentials[0] == reader.GetValue("Username").ToString() && credentials[1] == reader.GetValue("Password_Hash").ToString();
                     }
 
                 }
@@ -72,8 +66,27 @@ namespace SWE1_MTCG.Services
                 cmd.Parameters.Add("password", NpgsqlDbType.Bytea).Value = Encoding.UTF8.GetBytes(credentials[1]);
                 cmd.Prepare();
                 //ExecuteNonQuery returns affected rows
-                return cmd.ExecuteNonQuery() == 1 ?  new MtcgClient(user, sessionToken) :  null;
+                if (cmd.ExecuteNonQuery() != 1) return null;
             }
+
+            statement =  "SELECT * FROM mtcg.\"User\"" +
+                                "WHERE \"Username\"=@username AND \"Password_Hash\"=@password";
+            using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+            {
+                cmd.Parameters.Add("username", NpgsqlDbType.Varchar).Value = credentials[0];
+                cmd.Parameters.Add("password", NpgsqlDbType.Bytea).Value = Encoding.UTF8.GetBytes(credentials[1]);
+                cmd.Prepare();
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                {
+                    if (reader.Read())
+                    {
+                        return new MtcgClient(new User(reader), sessionToken);
+                    }
+
+                }
+            }
+
+            return null;
         }
 
         public Package AcquirePackage()

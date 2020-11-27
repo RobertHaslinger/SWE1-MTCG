@@ -14,51 +14,45 @@ namespace SWE1_MTCG.Api
     {
         private MessageController _messageController;
 
+        public bool AllowAnonymous => true;
+
         public MessageApi()
         {
             IFileService fileService = new FileService();
             _messageController = new MessageController(fileService);
         }
 
-        public ResponseContext Get(object param)
+        public ResponseContext Get(Dictionary<string, object> param)
         {
-            RequestContext request = (RequestContext) param;
-            KeyValuePair<StatusCode, object> responsePair;
-            if (string.IsNullOrWhiteSpace(request.RequestedResource))
-            {
-                responsePair = _messageController.ReadAllFiles();
-            }
-            else
-            {
-                responsePair = _messageController.ReadExistingFile(Convert.ToInt32(request.RequestedResource));
-            }
+            RequestContext request = (RequestContext) param["request"];
+
+            var responsePair = string.IsNullOrWhiteSpace(request.RequestedResource)
+                ? _messageController.ReadAllFiles()
+                : _messageController.ReadExistingFile(Convert.ToInt32(request.RequestedResource));
 
             return new ResponseContext(request, responsePair);
         }
 
-        public ResponseContext Post(object param)
+        public ResponseContext Post(Dictionary<string, object> param)
         {
-            RequestContext request = (RequestContext)param;
-            KeyValuePair<StatusCode, object> responsePair;
-            responsePair = _messageController.AddNewFile(request.Payload);
+            RequestContext request = (RequestContext)param["request"];
+            var responsePair = _messageController.AddNewFile(request.Payload);
 
             return new ResponseContext(request, responsePair);
         }
 
-        public ResponseContext Put(object param)
+        public ResponseContext Put(Dictionary<string, object> param)
         {
-            RequestContext request = (RequestContext)param;
-            KeyValuePair<StatusCode, object> responsePair;
-            responsePair = _messageController.EditFile(request.Payload, Convert.ToInt32(request.RequestedResource));
+            RequestContext request = (RequestContext)param["request"];
+            var responsePair = _messageController.EditFile(request.Payload, Convert.ToInt32(request.RequestedResource));
 
             return new ResponseContext(request, responsePair);
         }
 
-        public ResponseContext Delete(object param)
+        public ResponseContext Delete(Dictionary<string, object> param)
         {
-            RequestContext request = (RequestContext)param;
-            KeyValuePair<StatusCode, object> responsePair;
-            responsePair = _messageController.DeleteFile(Convert.ToInt32(request.RequestedResource));
+            RequestContext request = (RequestContext)param["request"];
+            var responsePair = _messageController.DeleteFile(Convert.ToInt32(request.RequestedResource));
 
             return new ResponseContext(request, responsePair);
         }

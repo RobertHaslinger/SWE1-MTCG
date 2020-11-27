@@ -107,20 +107,11 @@ namespace SWE1_MTCG.Server
                         request.Headers.ContainsKey("Authorization") &&
                         request.Headers["Authorization"].Contains("Basic")
                             ? request.Headers["Authorization"][6..]
-                            : string.Empty; 
+                            : string.Empty;
 
-                    IRestApi restApi = _apiService.GetRequestedApi(request.RequestedApi);
-
-                    response = request.HttpMethod switch
-                    {
-                        HttpMethod.Get => restApi.Get(request),
-                        HttpMethod.Post => restApi.Post(request),
-                        HttpMethod.Put => restApi.Put(request),
-                        HttpMethod.Delete => restApi.Delete(request),
-                        HttpMethod.Unrecognized => new ResponseContext(request, new KeyValuePair<StatusCode, object>(
-                            StatusCode.NotImplemented,
-                            "The Server either does not recognize the request method, or it lacks the ability to fulfill the request."))
-                    };
+                    response = ClientMapSingleton.GetInstance.ClientMap.ContainsKey(token)
+                        ? ProcessKnownClientRequest(ClientMapSingleton.GetInstance.ClientMap[token], request)
+                        : ProcessAnonymousClientRequest(request);
                 }
                 catch (KeyNotFoundException)
                 {
@@ -141,6 +132,51 @@ namespace SWE1_MTCG.Server
                 Console.WriteLine(ex.Message);
             }
             
+        }
+
+        private ResponseContext ProcessAnonymousClientRequest(RequestContext request)
+        {
+            IRestApi restApi = _apiService.GetRequestedApi(request.RequestedApi);
+            if (!restApi.AllowAnonymous)
+                return new ResponseContext(request, new KeyValuePair<StatusCode, object>(
+                    StatusCode.Unauthorized,
+                    "You have to log in to use this service."));
+
+            Dictionary<string, object> param = new Dictionary<string, object>(new[]
+            {
+                new KeyValuePair<string, object>("request", request)
+            });
+
+            return request.HttpMethod switch
+            {
+                HttpMethod.Get => restApi.Get(param),
+                HttpMethod.Post => restApi.Post(param),
+                HttpMethod.Put => restApi.Put(param),
+                HttpMethod.Delete => restApi.Delete(param),
+                HttpMethod.Unrecognized => new ResponseContext(request, new KeyValuePair<StatusCode, object>(
+                    StatusCode.NotImplemented,
+                    "The Server either does not recognize the request method, or it lacks the ability to fulfill the request."))
+            };
+        }
+
+        private ResponseContext ProcessKnownClientRequest(MtcgClient client, RequestContext request)
+        {
+            IRestApi restApi = _apiService.GetRequestedApi(request.RequestedApi);
+            Dictionary<string, object> param = new Dictionary<string, object>(new []
+            {
+                new KeyValuePair<string, object>("request", request),
+                new KeyValuePair<string, object>("client", client)
+            });
+            return request.HttpMethod switch
+            {
+                HttpMethod.Get => restApi.Get(param),
+                HttpMethod.Post => restApi.Post(param),
+                HttpMethod.Put => restApi.Put(param),
+                HttpMethod.Delete => restApi.Delete(param),
+                HttpMethod.Unrecognized => new ResponseContext(request, new KeyValuePair<StatusCode, object>(
+                    StatusCode.NotImplemented,
+                    "The Server either does not recognize the request method, or it lacks the ability to fulfill the request."))
+            };
         }
     }
 }

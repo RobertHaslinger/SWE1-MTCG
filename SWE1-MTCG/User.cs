@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
+using Npgsql;
 using SWE1_MTCG.Cards;
 using SWE1_MTCG.Interfaces;
 using SWE1_MTCG.Services;
@@ -33,6 +35,14 @@ namespace SWE1_MTCG
         {
             Username = username;
             Credentials = $"{username}:{Hash(password)}";
+        }
+
+        //TODO add Deck, Stack, ...
+        public User(NpgsqlDataReader reader)
+        {
+            Username = reader.GetValue("Username").ToString();
+            Credentials = $"{Username}:{reader.GetValue("Password_hash")}";
+            Coins = (int)reader.GetValue("Coins");
         }
 
         #endregion

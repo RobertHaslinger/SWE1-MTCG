@@ -16,20 +16,22 @@ namespace SWE1_MTCG.Api
     {
         private UserController _userController;
 
+        public bool AllowAnonymous => true;
+
         public UserApi()
         {
             IUserService userService= new UserService();
             _userController = new UserController(userService);
         }
 
-        public ResponseContext Get(object param)
+        public ResponseContext Get(Dictionary<string, object> param)
         {
             throw new NotImplementedException();
         }
 
-        public ResponseContext Post(object param)
+        public ResponseContext Post(Dictionary<string, object> param)
         {
-            RequestContext request = (RequestContext) param;
+            RequestContext request = (RequestContext) param["request"];
             if (!request.Headers.ContainsKey("Content-Type") || request.Headers["Content-Type"] != "application/json")
             {
                 return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.UnsupportedMediaType, ""));
@@ -44,12 +46,12 @@ namespace SWE1_MTCG.Api
             return new ResponseContext(request, _userController.Register(userDto.Username, userDto.Password));
         }
 
-        public ResponseContext Put(object param)
+        public ResponseContext Put(Dictionary<string, object> param)
         {
             throw new NotImplementedException();
         }
 
-        public ResponseContext Delete(object param)
+        public ResponseContext Delete(Dictionary<string, object> param)
         {
             throw new NotImplementedException();
         }

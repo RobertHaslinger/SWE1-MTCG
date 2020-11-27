@@ -11,9 +11,11 @@ namespace SWE1_MTCG.Interfaces
     /// </summary>
     public interface IRestApi
     {
-        ResponseContext Get(object param);
-        ResponseContext Post(object param);
-        ResponseContext Put(object param);
-        ResponseContext Delete(object param);
+        bool AllowAnonymous { get; }
+
+        ResponseContext Get(Dictionary<string, object> param);
+        ResponseContext Post(Dictionary<string, object> param);
+        ResponseContext Put(Dictionary<string, object> param);
+        ResponseContext Delete(Dictionary<string, object> param);
     }
 }
