@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using Npgsql;
 using SWE1_MTCG.Database;
 using SWE1_MTCG.Enums;
 using SWE1_MTCG.Interfaces;
@@ -66,7 +67,15 @@ namespace SWE1_MTCG.Server
 
             _server.Start();
             //TODO execute script that starts database automatically
-            PostgreSQLSingleton.GetInstance.Connection.Open();
+            try
+            {
+                PostgreSQLSingleton.GetInstance.Connection.Open();
+            }
+            catch (NpgsqlException)
+            {
+                Console.WriteLine("No connection to database, this session will not be stored");
+            }
+            
             Console.WriteLine("Server is running on {0}:{1}", _ipAddress, _port);
             _buffer= new byte[1024];
             while (true)
