@@ -7,6 +7,7 @@ namespace SWE1_MTCG.Cards
 {
     public abstract class Card
     {
+        public Guid Guid { get; init; }
         public string Name { get; protected set; }
         public double Damage { get; protected set; }
         public ElementType Element { get; protected set; }

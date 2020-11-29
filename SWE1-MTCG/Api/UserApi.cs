@@ -38,7 +38,7 @@ namespace SWE1_MTCG.Api
             }
 
             UserDto userDto = JsonSerializer.Deserialize<UserDto>(request.Payload);
-            if (string.IsNullOrWhiteSpace(userDto.Username) || string.IsNullOrWhiteSpace(userDto.Password))
+            if (userDto==null || string.IsNullOrWhiteSpace(userDto.Username) || string.IsNullOrWhiteSpace(userDto.Password))
             {
                 return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.BadRequest, "Either username or password is empty."));
             }
