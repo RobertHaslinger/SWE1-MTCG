@@ -55,7 +55,14 @@ namespace SWE1_MTCG.Api
 
         public ResponseContext Delete(Dictionary<string, object> param)
         {
-            throw new NotImplementedException();
+            RequestContext request = (RequestContext)param["request"];
+            Guid guid;
+            if (!Guid.TryParse(request.RequestedResource, out guid))
+            {
+                return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.BadRequest, "The requested resource is no valid GUID"));
+            }
+
+            return new ResponseContext(request, _cardController.DeleteCard(guid));
         }
     }
 }
