@@ -26,7 +26,7 @@ namespace SWE1_MTCG.Controller
                     { } state when state.StartsWith("02") => new KeyValuePair<StatusCode, object>(StatusCode.BadRequest, null),
                     { } state when state.StartsWith("08") => new KeyValuePair<StatusCode, object>(StatusCode.NotFound, null),
                     { } state when state.StartsWith("0A") => new KeyValuePair<StatusCode, object>(StatusCode.NotImplemented, null),
-                    { } state when state.StartsWith("23") => new KeyValuePair<StatusCode, object>(StatusCode.Conflict, null),
+                    { } state when state.StartsWith("23") => new KeyValuePair<StatusCode, object>(StatusCode.Conflict, "This item may exist already"),
                     _ => new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, null)
                 };
             }
