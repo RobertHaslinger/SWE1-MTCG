@@ -74,18 +74,32 @@ namespace SWE1_MTCG.Controller
             }
         }
 
-        //TODO work with /transactions --> Inject UserServiceWithTransactions
-        public bool AcquirePackage(User user)
+        public KeyValuePair<StatusCode, object> AcquirePackage(ref MtcgClient client, PackageType type)
         {
-            if (user == null) return false;
+            if (!(_userService is IPackageTransactionService))
+                return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, null);
 
-            int packagePrice = _userService.GetPackagePrice();
-            if (!HasEnoughCoins(user.Coins, packagePrice)) return false;
-            Package package = _userService.AcquirePackage();
-            user.AddPackage(package);
-            user.RemoveCoins(packagePrice);
-            return true;
+            if (client == null) 
+                return new KeyValuePair<StatusCode, object>(StatusCode.Unauthorized, null);
 
+            try
+            {
+                int packagePrice = ((IPackageTransactionService)_userService).GetPackagePrice(type);
+                if (packagePrice == -1)
+                {
+                    return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, null);
+                }
+                if (!HasEnoughCoins(client.User.Coins, packagePrice))
+                    return new KeyValuePair<StatusCode, object>(StatusCode.Conflict, "You don't have enough coins");
+
+                ((IPackageTransactionService)_userService).AcquirePackage(ref client, type);
+                return new KeyValuePair<StatusCode, object>(StatusCode.OK, "");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         #endregion

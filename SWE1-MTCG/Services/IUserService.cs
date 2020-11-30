@@ -11,9 +11,5 @@ namespace SWE1_MTCG.Services
         bool IsRegistered(User user);
         bool Register(User user);
         MtcgClient Login(User user);
-        Package AcquirePackage();
-        int GetPackagePrice();
-        Task QueueForBattle();
-        void CancelQueue();
     }
 }

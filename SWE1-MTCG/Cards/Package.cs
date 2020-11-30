@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using Npgsql;
 using SWE1_MTCG.Cards.Monster;
 using SWE1_MTCG.Cards.Spells;
 using SWE1_MTCG.Enums;
@@ -14,26 +16,25 @@ namespace SWE1_MTCG.Cards
     {
 
         #region fields
-
-        private List<Card> _cards;
         #endregion
 
         #region properties
         public PackageType PackageType { get; init; }
+        public List<Card> Cards { get; }
         #endregion
 
         #region constructor
 
         public Package()
         {
-            _cards= new List<Card>();
+            Cards= new List<Card>();
             PackageType = PackageType.Random;
             GenerateCards();
         }
 
         public Package(IEnumerable<Card> cards)
         {
-            _cards = cards.ToList();
+            Cards = cards.ToList();
             PackageType = PackageType.Basic;
         }
         #endregion
@@ -49,7 +50,7 @@ namespace SWE1_MTCG.Cards
             Card cascade = new WaterSpell("Cascade", 35);
             Card theodor= new Orc("Theodor", 50, ElementType.Normal);
 
-            _cards.AddRange(new [] {fireDragon, goldenKnight, gandalf, cascade, theodor});
+            Cards.AddRange(new [] {fireDragon, goldenKnight, gandalf, cascade, theodor});
         }
         #endregion
 
@@ -60,7 +61,7 @@ namespace SWE1_MTCG.Cards
 
         public IEnumerable<Card> GetAllCards()
         {
-            return _cards;
+            return Cards;
         }
     }
 }

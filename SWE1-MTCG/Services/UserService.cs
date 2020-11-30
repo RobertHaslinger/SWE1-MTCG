@@ -89,25 +89,5 @@ namespace SWE1_MTCG.Services
 
             return null;
         }
-
-        public Package AcquirePackage()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int GetPackagePrice()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task QueueForBattle()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CancelQueue()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Npgsql;
 using SWE1_MTCG.Cards;
@@ -15,7 +16,7 @@ namespace SWE1_MTCG
     {
         #region fields
         
-        private Stack<Package> _currentUnopenedPackages = new Stack<Package>();
+        
         #endregion
 
         #region properties
@@ -25,7 +26,7 @@ namespace SWE1_MTCG
         public int Coins { get; private set; } = 0;
         public Deck Deck { get; set; } = new Deck();
         public CardStack Stack { get; set; } = new CardStack();
-
+        public Stack<Package> CurrentUnopenedPackages { get; set; } = new Stack<Package>();
         #endregion
 
 
@@ -43,6 +44,11 @@ namespace SWE1_MTCG
             Username = reader["Username"].ToString();
             Credentials = $"{Username}:{Encoding.Default.GetString((byte[])reader["Password_Hash"])}";
             Coins = (int)reader["Coins"];
+            string unopenedPackages;
+            if (!string.IsNullOrWhiteSpace(unopenedPackages = reader["UnopenedPackages"].ToString()))
+            {
+                CurrentUnopenedPackages = JsonSerializer.Deserialize<Stack<Package>>(unopenedPackages);
+            }
         }
 
         #endregion
@@ -78,7 +84,7 @@ namespace SWE1_MTCG
 
         public void RemoveCoins(int amount)
         {
-            if (amount < 0)
+            if (amount > 0)
             {
                 Coins -= amount;
             }
@@ -88,19 +94,19 @@ namespace SWE1_MTCG
         {
             if (package == null) return;
 
-            _currentUnopenedPackages.Push(package);
+            CurrentUnopenedPackages.Push(package);
         }
 
         public IEnumerable OpenPackage()
         {
             if (!HasAnyUnopenedPackages()) return null;
 
-            return _currentUnopenedPackages.Pop().GetAllCards();
+            return CurrentUnopenedPackages.Pop().GetAllCards();
         }
 
         public bool HasAnyUnopenedPackages()
         {
-            return _currentUnopenedPackages.Count > 0;
+            return CurrentUnopenedPackages.Count > 0;
         }
 
         #endregion
