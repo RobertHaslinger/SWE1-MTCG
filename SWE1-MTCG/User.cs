@@ -40,9 +40,9 @@ namespace SWE1_MTCG
         //TODO add Deck, Stack, ...
         public User(NpgsqlDataReader reader)
         {
-            Username = reader.GetValue("Username").ToString();
-            Credentials = $"{Username}:{reader.GetValue("Password_hash")}";
-            Coins = (int)reader.GetValue("Coins");
+            Username = reader["Username"].ToString();
+            Credentials = $"{Username}:{Encoding.Default.GetString((byte[])reader["Password_Hash"])}";
+            Coins = (int)reader["Coins"];
         }
 
         #endregion

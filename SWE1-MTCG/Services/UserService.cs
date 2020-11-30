@@ -22,11 +22,12 @@ namespace SWE1_MTCG.Services
                 cmd.Parameters.Add("username", NpgsqlDbType.Varchar).Value = credentials[0];
                 cmd.Parameters.Add("password", NpgsqlDbType.Bytea).Value = Encoding.UTF8.GetBytes(credentials[1]);
                 cmd.Prepare();
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                using (var reader = cmd.ExecuteReader())
                 {
-                    if (reader.Read())
+                    if (reader.HasRows)
                     {
-                            return credentials[0] == reader.GetValue("Username").ToString() && credentials[1] == reader.GetValue("Password_Hash").ToString();
+                        reader.Read();
+                        return credentials[0] == reader["Username"].ToString() && credentials[1] == Encoding.Default.GetString((byte[])reader["Password_Hash"]);
                     }
 
                 }
@@ -55,7 +56,7 @@ namespace SWE1_MTCG.Services
         {
             string sessionToken = $"{user.Username}-mtcgToken";
 
-            string statement = "UPDATE mtcg.\"User\"SET \"SessionId\"=@sessionToken" +
+            string statement = "UPDATE mtcg.\"User\" SET \"CurrentToken\"=@sessionToken " +
                                "WHERE \"Username\"=@username AND \"Password_Hash\"=@password";
             string[] credentials = user.Credentials.Split(':', 2);
 
@@ -69,8 +70,8 @@ namespace SWE1_MTCG.Services
                 if (cmd.ExecuteNonQuery() != 1) return null;
             }
 
-            statement =  "SELECT * FROM mtcg.\"User\"" +
-                                "WHERE \"Username\"=@username AND \"Password_Hash\"=@password";
+            statement = "SELECT * FROM mtcg.\"User\"" +
+                        "WHERE \"Username\"=@username AND \"Password_Hash\"=@password";
             using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
             {
                 cmd.Parameters.Add("username", NpgsqlDbType.Varchar).Value = credentials[0];
