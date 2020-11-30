@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using SWE1_MTCG.Cards;
+using SWE1_MTCG.Enums;
 using SWE1_MTCG.Interfaces;
 using SWE1_MTCG.Server;
 
@@ -31,7 +32,16 @@ namespace SWE1_MTCG.Dto
                 return (Card)Activator.CreateInstance(t, Name, Damage);
             }
 
-            return (Card) Activator.CreateInstance(t, Name, Damage, Element);
+            ElementType element;
+            try
+            {
+                element = Enum.Parse<ElementType>(Element);
+            }
+            catch (Exception)
+            {
+                element = ElementType.Normal;
+            }
+            return (Card) Activator.CreateInstance(t, Name, Damage, element);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace SWE1_MTCG.Api
             {
                 return new ResponseContext(request,
                     new KeyValuePair<StatusCode, object>(StatusCode.BadRequest,
-                        "Either the card type or the name is empty or the given type does not exist"));
+                        "Either the card type or the name is empty or the given type or the element does not exist"));
             }
 
             return new ResponseContext(request, _cardController.CreateCard(card));
