@@ -7,11 +7,44 @@ using Npgsql;
 using NpgsqlTypes;
 using SWE1_MTCG.Cards;
 using SWE1_MTCG.Database;
+using SWE1_MTCG.Dto;
 
 namespace SWE1_MTCG.Services
 {
     public class CardService : ICardService
     {
+        public Card GetCard(Guid guid)
+        {
+            string statement = "SELECT * FROM mtcg.\"Card\" " +
+                               "WHERE \"Guid\"=@guid";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+            {
+                cmd.Parameters.Add("guid", NpgsqlDbType.Uuid).Value = guid;
+                cmd.Prepare();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        CardDto cardDto= new CardDto()
+                        {
+                            CardType = reader["Type"].ToString(),
+                            Damage = (double)reader["Damage"],
+                            Element = reader["Element"].ToString(),
+                            Name = reader["Name"].ToString()
+                        };
+                        Card card = cardDto.ToObject();
+                        card.Guid = Guid.Parse(reader["Guid"].ToString());
+                        return card;
+                    }
+
+                }
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Check for Card Guid in DB.
         /// </summary>

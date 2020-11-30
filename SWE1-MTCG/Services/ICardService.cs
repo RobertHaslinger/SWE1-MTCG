@@ -10,6 +10,8 @@ namespace SWE1_MTCG.Services
     public interface ICardService
     {
         bool CardExists(Guid guid);
+        bool CardExists(Card card);
+        Card GetCard(Guid guid);
         Card CreateCard(Card card);
         Card DeleteCard(Guid guid);
     }

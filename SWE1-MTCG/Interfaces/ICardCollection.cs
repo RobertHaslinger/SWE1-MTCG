@@ -8,6 +8,6 @@ namespace SWE1_MTCG.Interfaces
 {
     public interface ICardCollection
     {
-        IEnumerable GetAllCards();
+        IEnumerable<Card> GetAllCards();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using SWE1_MTCG.Cards.Monster;
 using SWE1_MTCG.Cards.Spells;
@@ -18,7 +19,7 @@ namespace SWE1_MTCG.Cards
         #endregion
 
         #region properties
-
+        public PackageType PackageType { get; init; }
         #endregion
 
         #region constructor
@@ -26,7 +27,14 @@ namespace SWE1_MTCG.Cards
         public Package()
         {
             _cards= new List<Card>();
+            PackageType = PackageType.Random;
             GenerateCards();
+        }
+
+        public Package(IEnumerable<Card> cards)
+        {
+            _cards = cards.ToList();
+            PackageType = PackageType.Basic;
         }
         #endregion
 
@@ -50,7 +58,7 @@ namespace SWE1_MTCG.Cards
         #endregion
 
 
-        public IEnumerable GetAllCards()
+        public IEnumerable<Card> GetAllCards()
         {
             return _cards;
         }

@@ -107,9 +107,9 @@ namespace SWE1_MTCG.Server
                 } while (networkStream.DataAvailable);
                 request= new RequestContext(Encoding.ASCII.GetString(memoryStream.ToArray(), 0, (int)memoryStream.Length), _apiService);
             }
+            ResponseContext response;
             try
             {
-                ResponseContext response;
                 try
                 {
                     string token =
@@ -132,15 +132,16 @@ namespace SWE1_MTCG.Server
                     response = new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.NotImplemented,
                         $"The requested service {Enum.GetName(typeof(HttpMethod), request.HttpMethod)} {request.RequestedApi} has not yet been implemented on this server."));
                 }
-
-                using StreamWriter writer = new StreamWriter(networkStream) { AutoFlush = true };
                 client.Client.Send(Encoding.ASCII.GetBytes(response.ToString()));
             }
             catch (Exception ex)
             {
+                response = new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.BadRequest,
+                    $"The request could not been processed by the server."));
+                client.Client.Send(Encoding.ASCII.GetBytes(response.ToString()));
                 Console.WriteLine(ex.Message);
             }
-            
+            client.Close();
         }
 
         private ResponseContext ProcessAnonymousClientRequest(RequestContext request)

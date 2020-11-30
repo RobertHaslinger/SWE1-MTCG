@@ -32,7 +32,7 @@ namespace SWE1_MTCG.Cards
 
         #region public methods
 
-        public IEnumerable GetAllCards()
+        public IEnumerable<Card> GetAllCards()
         {
             return _cards;
         }
