@@ -18,7 +18,7 @@ namespace SWE1_MTCG.Services
             {"/cards", () => new CardApi()},
             {"/deck", () => new DeckApi()},
             {"/battles", () => new BattleApi()},
-            {"/transactions", () => new MarketApi()},
+            {"/transactions", () => new TransactionApi()},
             {"/packages", () => new PackageApi()},
             {"/score", () => new RankingApi()},
             {"/stats", () => new StatisticApi()},

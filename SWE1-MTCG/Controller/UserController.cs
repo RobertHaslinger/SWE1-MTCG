@@ -76,7 +76,7 @@ namespace SWE1_MTCG.Controller
 
         public KeyValuePair<StatusCode, object> AcquirePackage(ref MtcgClient client, PackageType type)
         {
-            if (!(_userService is IPackageTransactionService))
+            if (!(_userService is IPackageTransactionService && _userService is ILoggable))
                 return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, null);
 
             if (client == null) 
@@ -93,12 +93,23 @@ namespace SWE1_MTCG.Controller
                     return new KeyValuePair<StatusCode, object>(StatusCode.Conflict, "You don't have enough coins");
 
                 ((IPackageTransactionService)_userService).AcquirePackage(ref client, type);
-                return new KeyValuePair<StatusCode, object>(StatusCode.OK, "");
+                string logDescription =
+                    $"{client.User.Username} acquired a {Enum.GetName(typeof(PackageType), type)} package and paid {packagePrice}.";
+                bool logged = ((ILoggable)_userService).Log(new Dictionary<string, object>(new []
+                {
+                    new KeyValuePair<string, object>("client", client),
+                    new KeyValuePair<string, object>("description", logDescription) 
+                }));
+
+
+                if (!logged)
+                    Console.WriteLine("Package transaction was not logged");
+
+                return new KeyValuePair<StatusCode, object>(StatusCode.OK, logDescription);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                return HandleException(e);
             }
         }
 

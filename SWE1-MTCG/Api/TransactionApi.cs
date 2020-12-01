@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 using SWE1_MTCG.Controller;
+using SWE1_MTCG.Dto;
 using SWE1_MTCG.Enums;
 using SWE1_MTCG.Interfaces;
 using SWE1_MTCG.Server;
@@ -9,12 +11,12 @@ using SWE1_MTCG.Services;
 
 namespace SWE1_MTCG.Api
 {
-    public class MarketApi : IRestApi
+    public class TransactionApi : IRestApi
     {
         private UserController _userController;
         public bool AllowAnonymous => false;
 
-        public MarketApi()
+        public TransactionApi()
         {
             IUserService userService= new UserServiceWithTransaction();
             _userController= new UserController(userService);
@@ -33,7 +35,14 @@ namespace SWE1_MTCG.Api
             {
                 case "packages":
                 {
-                    return new ResponseContext(request,_userController.AcquirePackage(ref client, PackageType.Basic));
+                    if (request.Payload.Length>0 && !request.Headers.ContainsKey("Content-Type") || request.Headers["Content-Type"] != "application/json")
+                    {
+                        return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.UnsupportedMediaType, ""));
+                    }
+
+                    PackageTypeDto packageTypeDto = JsonSerializer.Deserialize<PackageTypeDto>(request.Payload);
+                    PackageType packageType = packageTypeDto?.ToObject() ?? PackageType.Basic;
+                    return new ResponseContext(request,_userController.AcquirePackage(ref client, packageType));
                 }
             }
 

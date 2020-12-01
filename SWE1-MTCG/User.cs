@@ -23,6 +23,7 @@ namespace SWE1_MTCG
 
         public string Username { get; init; }
         public string Credentials { get; init; }
+        public int UserId { get; }
         public int Coins { get; private set; } = 0;
         public Deck Deck { get; set; } = new Deck();
         public CardStack Stack { get; set; } = new CardStack();
@@ -41,6 +42,7 @@ namespace SWE1_MTCG
         //TODO add Deck, Stack, ...
         public User(NpgsqlDataReader reader)
         {
+            UserId = (int) reader["Id"];
             Username = reader["Username"].ToString();
             Credentials = $"{Username}:{Encoding.Default.GetString((byte[])reader["Password_Hash"])}";
             Coins = (int)reader["Coins"];

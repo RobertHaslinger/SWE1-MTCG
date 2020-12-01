@@ -16,9 +16,41 @@ namespace SWE1_MTCG.Services
 {
     public class UserServiceWithTransaction : UserService, IPackageTransactionService, ILoggable
     {
-        public void Log(KeyValuePair<string, object> param)
+
+        private List<Guid> AcquireRandomPackage()
         {
-            throw new NotImplementedException();
+            List<Guid> guids= new List<Guid>();
+            string statement = "SELECT * FROM mtcg.\"Card\" \r\nORDER BY RANDOM()\r\nLIMIT 5;";
+            using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+            {
+                cmd.Prepare();
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
+                {
+                    while (reader.Read())
+                    {
+                        guids.Add(Guid.Parse(reader["Guid"].ToString()));
+                    }
+
+                };
+            }
+
+            return guids;
+        }
+
+        public bool Log(Dictionary<string, object> param)
+        {
+            string statement = "INSERT INTO mtcg.\"Transactions\"(\"UserId\", \"Description\", \"Date\") " +
+                               "VALUES(@userId, @description, @date)";
+
+            using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+            {
+                cmd.Parameters.Add("userId", NpgsqlDbType.Integer).Value = ((MtcgClient)param["client"]).User.UserId;
+                cmd.Parameters.Add("description", NpgsqlDbType.Varchar).Value = param["description"].ToString();
+                cmd.Parameters.Add("date", NpgsqlDbType.Date).Value = DateTime.UtcNow;
+                cmd.Prepare();
+                //ExecuteNonQuery returns affected rows
+                return cmd.ExecuteNonQuery() == 1;
+            }
         }
 
         public bool AcquirePackage(ref MtcgClient client, PackageType type)
@@ -26,28 +58,43 @@ namespace SWE1_MTCG.Services
             Package package=null;
             PackageDto packageDto=null;
             int price=0;
-            string statement = "SELECT * FROM mtcg.\"Package\" p, mtcg.\"PackageType\" pT " +
-                               "WHERE pt.\"Id\"=@packageTypeId AND p.\"PackageTypeId\"=pT.\"Id\"";
-
-            using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+            string statement;
+            if (type == PackageType.Random)
             {
-                cmd.Parameters.Add("packageTypeId", NpgsqlDbType.Integer).Value = (int)type;
-                cmd.Prepare();
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
+                packageDto= new PackageDto()
                 {
-                    if (reader.HasRows)
-                    {
-                        reader.Read();
-                        packageDto = new PackageDto()
-                        {
-                            CardGuids = JsonSerializer.Deserialize<List<Guid>>(reader["Cards"].ToString())
-                        };
-                        price = (int) reader["Price"];
-                        
-                    }
-
+                    CardGuids = AcquireRandomPackage()
                 };
+                price = GetPackagePrice(PackageType.Random);
             }
+            else
+            {
+                statement = "SELECT * FROM mtcg.\"Package\" p, mtcg.\"PackageType\" pT " +
+                                   "WHERE pt.\"Id\"=@packageTypeId AND p.\"PackageTypeId\"=pT.\"Id\" " +
+                                   "ORDER BY RANDOM() " +
+                                   "LIMIT 1;";
+
+                using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+                {
+                    cmd.Parameters.Add("packageTypeId", NpgsqlDbType.Integer).Value = (int)type;
+                    cmd.Prepare();
+                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            packageDto = new PackageDto()
+                            {
+                                CardGuids = JsonSerializer.Deserialize<List<Guid>>(reader["Cards"].ToString())
+                            };
+                            price = (int)reader["Price"];
+
+                        }
+
+                    };
+                }
+            }
+            
             package = packageDto?.ToObject();
 
             if (package == null)

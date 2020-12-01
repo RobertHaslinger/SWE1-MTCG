@@ -8,6 +8,6 @@ namespace SWE1_MTCG.Services
 {
     public interface ILoggable
     {
-        void Log(KeyValuePair<string, object> param);
+        bool Log(Dictionary<string, object> param);
     }
 }
