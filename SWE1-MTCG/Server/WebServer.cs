@@ -119,8 +119,8 @@ namespace SWE1_MTCG.Server
                             : string.Empty;
 
                     response = ClientMapSingleton.GetInstance.ClientMap.ContainsKey(token)
-                        ? ProcessKnownClientRequest(ClientMapSingleton.GetInstance.ClientMap[token], request)
-                        : ProcessAnonymousClientRequest(request);
+                        ? ProcessKnownClientRequest(ClientMapSingleton.GetInstance.ClientMap[token], request, client)
+                        : ProcessAnonymousClientRequest(request, client);
                 }
                 catch (KeyNotFoundException)
                 {
@@ -144,7 +144,7 @@ namespace SWE1_MTCG.Server
             client.Close();
         }
 
-        private ResponseContext ProcessAnonymousClientRequest(RequestContext request)
+        private ResponseContext ProcessAnonymousClientRequest(RequestContext request, TcpClient socket)
         {
             IRestApi restApi = _apiService.GetRequestedApi(request.RequestedApi);
             if (!restApi.AllowAnonymous)
@@ -154,7 +154,8 @@ namespace SWE1_MTCG.Server
 
             Dictionary<string, object> param = new Dictionary<string, object>(new[]
             {
-                new KeyValuePair<string, object>("request", request)
+                new KeyValuePair<string, object>("request", request),
+                new KeyValuePair<string, object>("socket", socket), 
             });
 
             return request.HttpMethod switch
@@ -169,7 +170,7 @@ namespace SWE1_MTCG.Server
             };
         }
 
-        private ResponseContext ProcessKnownClientRequest(MtcgClient client, RequestContext request)
+        private ResponseContext ProcessKnownClientRequest(MtcgClient client, RequestContext request, TcpClient socket)
         {
             IRestApi restApi = _apiService.GetRequestedApi(request.RequestedApi);
             Dictionary<string, object> param = new Dictionary<string, object>(new []

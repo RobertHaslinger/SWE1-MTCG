@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using Npgsql;
@@ -51,7 +52,7 @@ namespace SWE1_MTCG.Controller
             }
         }
 
-        public KeyValuePair<StatusCode, object> Login(User user)
+        public KeyValuePair<StatusCode, object> Login(User user, TcpClient socket)
         {
             try
             {
@@ -60,6 +61,7 @@ namespace SWE1_MTCG.Controller
                     MtcgClient client;
                     if ((client = _userService.Login(user)) !=null)
                     {
+                        client.Socket = socket;
                         ClientMapSingleton.GetInstance.ClientMap.AddOrUpdate(client.SessionToken, client,
                             (key, oldValue) => client);
                     }

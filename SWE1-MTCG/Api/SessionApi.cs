@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using SWE1_MTCG.Controller;
@@ -30,6 +31,7 @@ namespace SWE1_MTCG.Api
         public ResponseContext Post(Dictionary<string, object> param)
         {
             RequestContext request = (RequestContext)param["request"];
+            TcpClient socket = (TcpClient) param["socket"];
             if (!request.Headers.ContainsKey("Content-Type") || request.Headers["Content-Type"] != "application/json")
             {
                 return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.UnsupportedMediaType, ""));
@@ -42,7 +44,7 @@ namespace SWE1_MTCG.Api
                 return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.BadRequest, "Either username or password is empty."));
             }
 
-            return new ResponseContext(request, _userController.Login(user));
+            return new ResponseContext(request, _userController.Login(user, socket));
         }
 
         public ResponseContext Put(Dictionary<string, object> param)
