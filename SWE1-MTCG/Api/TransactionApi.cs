@@ -35,12 +35,19 @@ namespace SWE1_MTCG.Api
             {
                 case "packages":
                 {
-                    if (request.Payload.Length>0 && !request.Headers.ContainsKey("Content-Type") || request.Headers["Content-Type"] != "application/json")
+                    PackageTypeDto packageTypeDto = null;
+                    if (request.Payload.Length > 0)
                     {
-                        return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.UnsupportedMediaType, ""));
+                        if (!request.Headers.ContainsKey("Content-Type") ||
+                            request.Headers["Content-Type"] != "application/json")
+                        {
+                            return new ResponseContext(request,
+                                new KeyValuePair<StatusCode, object>(StatusCode.UnsupportedMediaType, ""));
+                        }
+
+                        packageTypeDto = JsonSerializer.Deserialize<PackageTypeDto>(request.Payload);
                     }
 
-                    PackageTypeDto packageTypeDto = JsonSerializer.Deserialize<PackageTypeDto>(request.Payload);
                     PackageType packageType = packageTypeDto?.ToObject() ?? PackageType.Basic;
                     return new ResponseContext(request,_userController.AcquirePackage(ref client, packageType));
                 }

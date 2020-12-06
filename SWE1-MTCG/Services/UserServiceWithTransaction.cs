@@ -24,7 +24,7 @@ namespace SWE1_MTCG.Services
             using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
             {
                 cmd.Prepare();
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
+                using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -100,10 +100,10 @@ namespace SWE1_MTCG.Services
             if (package == null)
                 return false;
 
-            //TODO maybe remove package but not sure
+            package.PackageType = type;
 
             //save old properties to fallback if necessary
-            Stack<Package> oldUnopenedPackages = client.User.CurrentUnopenedPackages;
+            Stack<Package> oldUnopenedPackages = new Stack<Package>(new Stack<Package>(client.User.CurrentUnopenedPackages));
 
             client.User.RemoveCoins(price);
             client.User.AddPackage(package);
