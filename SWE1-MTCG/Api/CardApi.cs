@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using SWE1_MTCG.Cards;
@@ -25,7 +26,18 @@ namespace SWE1_MTCG.Api
 
         public ResponseContext Get(Dictionary<string, object> param)
         {
-            throw new NotImplementedException();
+            RequestContext request = (RequestContext)param["request"];
+            MtcgClient client;
+            try
+            {
+                client = (MtcgClient)param["client"];
+            }
+            catch (Exception)
+            {
+                return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.Unauthorized, ""));
+            }
+
+            return new ResponseContext(request, _cardController.GetCards(client.User.Stack.GetAllCards().Select(c => c.Guid).ToList()));
         }
 
         public ResponseContext Post(Dictionary<string, object> param)

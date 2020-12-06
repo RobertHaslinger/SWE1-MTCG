@@ -20,7 +20,11 @@ namespace SWE1_MTCG.Server
             RequestUrl = $"{request.RequestedApi}/{request.RequestedResource}";
             RequestMethod = request.HttpMethod;
             StatusCode = keyValuePair.Key;
-            Content = JsonSerializer.Serialize(keyValuePair.Value);
+            JsonSerializerOptions options= new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            };
+            Content = JsonSerializer.Serialize(keyValuePair.Value, options);
             AddHeader("Response", $"{request.HttpVersion} {(int)StatusCode} {Enum.GetName(typeof(StatusCode), StatusCode)}");
             AddHeader("Server", "Robert Haslingers MTCG Web Server");
             AddHeader("Date", DateTime.Now.ToString());

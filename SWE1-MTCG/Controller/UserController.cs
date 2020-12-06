@@ -115,24 +115,31 @@ namespace SWE1_MTCG.Controller
 
         public KeyValuePair<StatusCode, object> OpenPackage(ref MtcgClient client)
         {
-            if (!(_userService is IPackageOpenService))
-                return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, null);
-
-            if (client == null)
-                return new KeyValuePair<StatusCode, object>(StatusCode.Unauthorized, null);
-
-            if (!client.User.HasAnyUnopenedPackages())
+            try
             {
-                return new KeyValuePair<StatusCode, object>(StatusCode.Conflict, "You have no unopened packages left. Go get some!");
-            }
+                if (!(_userService is IPackageOpenService))
+                    return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, null);
 
-            Package package = client.User.CurrentUnopenedPackages.Pop();
-            if (((IPackageOpenService) _userService).OpenPackage(ref client, package))
+                if (client == null)
+                    return new KeyValuePair<StatusCode, object>(StatusCode.Unauthorized, null);
+
+                if (!client.User.HasAnyUnopenedPackages())
+                {
+                    return new KeyValuePair<StatusCode, object>(StatusCode.Conflict, "You have no unopened packages left. Go get some!");
+                }
+
+                Package package = client.User.CurrentUnopenedPackages.Pop();
+                if (((IPackageOpenService)_userService).OpenPackage(ref client, package))
+                {
+                    return new KeyValuePair<StatusCode, object>(StatusCode.OK, package.GetAllCards());
+                }
+
+                return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, "");
+            }
+            catch (Exception e)
             {
-                return new KeyValuePair<StatusCode, object>(StatusCode.OK, package.GetAllCards());
+                return HandleException(e);
             }
-
-            return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, "");
         }
 
         #endregion

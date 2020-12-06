@@ -32,6 +32,28 @@ namespace SWE1_MTCG.Controller
             }
         }
 
+        public KeyValuePair<StatusCode, object> GetCards(List<Guid> guids)
+        {
+            List<Card> cards = new List<Card>();
+            try
+            {
+                foreach (Guid guid in guids)
+                {
+                    cards.Add(_cardService.GetCard(guid));
+                }
+
+                if (!cards.Any())
+                    return new KeyValuePair<StatusCode, object>(StatusCode.NoContent, "");
+
+                return new KeyValuePair<StatusCode, object>(StatusCode.OK, cards);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+            
+        }
+
         public KeyValuePair<StatusCode, object> DeleteCard(Guid guid)
         {
             try

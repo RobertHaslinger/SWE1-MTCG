@@ -33,36 +33,28 @@ namespace SWE1_MTCG.Cards
             string type = GetType().FullName;
             string element = Enum.GetName(typeof(ElementType), Element);
 
-            return $"Guid:{Guid}\nType:{type}\nName:{Name}\nDamage:{Damage}\nElement:{element}";
+            return $"Guid:{Guid}\r\nType:{type}\r\nName:{Name}\r\nDamage:{Damage}\r\nElement:{element}";
         }
 
-        public static Card Parse(string input)
+        public static Card Parse(string guid, string type, string name, string damage, string element)
         {
-            Dictionary<string, string> props= new Dictionary<string, string>();
-            foreach (string property in input.Split("\n"))
-            {
-                if (string.IsNullOrWhiteSpace(property)) continue;
-
-                string[] valuePair = property.Split(':');
-                props.Add(valuePair[0], valuePair[1]);
-            }
-            Type t = Type.GetType(props["Type"]);
+            Type t = Type.GetType(type);
             if (t == null)
                 return null;
 
             Card card;
             if (t.IsAssignableTo(typeof(ISpell)))
             {
-                card = (Card) Activator.CreateInstance(t, props["Name"], Convert.ToDouble(props["Damage"]));
+                card = (Card) Activator.CreateInstance(t, name, Convert.ToDouble(damage));
             }
             else
             {
-                card = (Card) Activator.CreateInstance(t, props["Name"], Convert.ToDouble(props["Damage"]),
-                    Enum.Parse<ElementType>(props["Element"]));
+                card = (Card) Activator.CreateInstance(t, name, Convert.ToDouble(damage),
+                    Enum.Parse<ElementType>(element));
             }
 
             if (card!=null)
-                card.Guid= System.Guid.Parse(props["Guid"]);
+                card.Guid= Guid.Parse(guid);
 
             return card;
         }
