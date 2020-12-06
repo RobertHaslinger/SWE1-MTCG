@@ -45,43 +45,5 @@ namespace SWE1_MTCG.Test
 
             Assert.AreEqual(StatusCode.OK, response);
         }
-
-        [TestCase(0)]
-        [TestCase(19)]
-        public void Test_UserControllerAcquirePackageShouldBeCalledNeverWhenUserCoinsLessThan20(int coins)
-        {
-            _userServiceMock.Setup(s => s.IsRegistered(_user)).Returns(true);
-            _userServiceMock.Setup(s => s.Login(_user)).Returns(_client);
-            _userServiceMock.Setup(s => s.GetPackagePrice()).Returns(20);
-            _userServiceMock.Setup(s => s.AcquirePackage()).Returns(new Package());
-
-            _userController.Login(_user);
-
-            _client.User.AddCoins(coins);
-            _userController.AcquirePackage(_client.User);
-
-            _userServiceMock.Verify(s => s.AcquirePackage(), Times.Never);
-        }
-
-        [TestCase(20)]
-        [TestCase(40)]
-        public void Test_UserControllerAcquirePackageShouldBeCalledOnceAndUserShouldHaveAtleastOnePackageWhenUserCoinsAtLeast20(int coins)
-        {
-            _userServiceMock.Setup(s => s.IsRegistered(_user)).Returns(true);
-            _userServiceMock.Setup(s => s.Login(_user)).Returns(_client);
-            _userServiceMock.Setup(s => s.GetPackagePrice()).Returns(20);
-            _userServiceMock.Setup(s => s.AcquirePackage()).Returns(new Package());
-
-
-            _userController.Login(_user);
-
-            _client.User.AddCoins(coins);
-            _userController.AcquirePackage(_client.User);
-
-            _userServiceMock.Verify(s => s.AcquirePackage(), Times.Once);
-            Assert.IsTrue(_client.User.HasAnyUnopenedPackages());
-        }
-
-
     }
 }

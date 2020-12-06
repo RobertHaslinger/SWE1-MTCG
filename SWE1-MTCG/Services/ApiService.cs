@@ -19,6 +19,7 @@ namespace SWE1_MTCG.Services
             {"/deck", () => new DeckApi()},
             {"/battles", () => new BattleApi()},
             {"/transactions", () => new TransactionApi()},
+            {"/transactions/packages", () => new TransactionPackagesApi()},
             {"/packages", () => new PackageApi()},
             {"/score", () => new RankingApi()},
             {"/stats", () => new StatisticApi()},
@@ -42,10 +43,8 @@ namespace SWE1_MTCG.Services
 
         }
 
-        public IRestApi GetRequestedApi(string requestedResource)
+        public IRestApi GetRequestedApi(string requestedApi)
         {
-            Regex apiRegex= new Regex("(/\\w+){1}");
-            string requestedApi = apiRegex.Match(requestedResource).Value.TrimEnd('/');
             if (_restApiMap.ContainsKey(requestedApi))
             {
                 return _restApiMap[requestedApi].Invoke();

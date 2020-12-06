@@ -29,7 +29,7 @@ namespace SWE1_MTCG.Server
         /// </summary>
         private const string FullResourcePattern = "(http[s]?:\\/\\/)?[^\\s([\" <,>]*[\\.\\/][^\\s[\",><]*";
 
-        private const string RequestedApiPattern = "(/\\w+){1}";
+        private const string RequestedApiPattern = "((\\/\\w+){1,}\\/*[^\\d]){1,}";
         private const string ValuesPattern = "((\\r\\n).+:.+)+(\\r\\n\\r\\n)";
         private const string PayloadPattern = "(\\r\\n\\r\\n)[^\\0]*";
 
@@ -54,7 +54,7 @@ namespace SWE1_MTCG.Server
             }
             HttpVersion = headerRegex.Match(header).Value;
             string fullResource = fullResourceRegex.Match(header).Value;
-            RequestedApi = requestedApiRegex.Match(fullResource).Value;
+            RequestedApi = requestedApiRegex.Match(fullResource).Value.TrimEnd('/');
             RequestedResource = requestedApiRegex.Replace(fullResource, "", 1).TrimStart('/');
             Headers = new Dictionary<string, string>();
 
