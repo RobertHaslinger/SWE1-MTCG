@@ -15,7 +15,7 @@ namespace SWE1_MTCG.Api
     public class PackageApi : IRestApi
     {
         private PackageController _packageController;
-        public bool AllowAnonymous => true;
+        public virtual bool AllowAnonymous => true;
 
         public PackageApi()
         {
@@ -23,12 +23,12 @@ namespace SWE1_MTCG.Api
             _packageController= new PackageController(packageService);
         }
 
-        public ResponseContext Get(Dictionary<string, object> param)
+        public virtual ResponseContext Get(Dictionary<string, object> param)
         {
             throw new NotImplementedException();
         }
 
-        public ResponseContext Post(Dictionary<string, object> param)
+        public virtual ResponseContext Post(Dictionary<string, object> param)
         {
             RequestContext request = (RequestContext)param["request"];
             if (!request.Headers.ContainsKey("Content-Type") || request.Headers["Content-Type"] != "application/json")
@@ -48,12 +48,12 @@ namespace SWE1_MTCG.Api
             return new ResponseContext(request, _packageController.CreatePackage(package));
         }
 
-        public ResponseContext Put(Dictionary<string, object> param)
+        public virtual ResponseContext Put(Dictionary<string, object> param)
         {
             throw new NotImplementedException();
         }
 
-        public ResponseContext Delete(Dictionary<string, object> param)
+        public virtual ResponseContext Delete(Dictionary<string, object> param)
         {
             throw new NotImplementedException();
         }

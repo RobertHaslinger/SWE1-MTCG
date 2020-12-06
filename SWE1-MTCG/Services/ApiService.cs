@@ -21,6 +21,7 @@ namespace SWE1_MTCG.Services
             {"/transactions", () => new TransactionApi()},
             {"/transactions/packages", () => new TransactionPackagesApi()},
             {"/packages", () => new PackageApi()},
+            {"/packages/open", () => new PackagesOpenApi()},
             {"/score", () => new RankingApi()},
             {"/stats", () => new StatisticApi()},
             {"/sessions", () => new SessionApi()},
@@ -45,6 +46,7 @@ namespace SWE1_MTCG.Services
 
         public IRestApi GetRequestedApi(string requestedApi)
         {
+            requestedApi = requestedApi.TrimEnd('/');
             if (_restApiMap.ContainsKey(requestedApi))
             {
                 return _restApiMap[requestedApi].Invoke();

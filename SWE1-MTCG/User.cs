@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Npgsql;
 using SWE1_MTCG.Cards;
 using SWE1_MTCG.Interfaces;
+using SWE1_MTCG.JsonConverter;
 using SWE1_MTCG.Services;
 
 namespace SWE1_MTCG
@@ -23,10 +25,15 @@ namespace SWE1_MTCG
 
         public string Username { get; init; }
         public string Credentials { get; init; }
+        [JsonIgnore]
         public int UserId { get; }
+        [JsonIgnore]
         public int Coins { get; private set; } = 0;
+        [JsonIgnore]
         public Deck Deck { get; set; } = new Deck();
+        [JsonIgnore]
         public CardStack Stack { get; set; } = new CardStack();
+        [JsonIgnore]
         public Stack<Package> CurrentUnopenedPackages { get; set; } = new Stack<Package>();
         #endregion
 
@@ -39,7 +46,6 @@ namespace SWE1_MTCG
             Credentials = $"{username}:{Hash(password)}";
         }
 
-        //TODO add Deck, Stack, ...
         public User(NpgsqlDataReader reader)
         {
             UserId = (int) reader["Id"];
@@ -49,7 +55,13 @@ namespace SWE1_MTCG
             string unopenedPackages;
             if (!string.IsNullOrWhiteSpace(unopenedPackages = reader["UnopenedPackages"].ToString()))
             {
-                CurrentUnopenedPackages = JsonSerializer.Deserialize<Stack<Package>>(unopenedPackages);
+                CurrentUnopenedPackages = JsonSerializer.Deserialize<Stack<Package>>(unopenedPackages );
+            }
+
+            string stack;
+            if (!string.IsNullOrWhiteSpace(stack = reader["Stack"].ToString()))
+            {
+                Stack.AddCards(JsonSerializer.Deserialize<List<Card>>(stack));
             }
         }
 

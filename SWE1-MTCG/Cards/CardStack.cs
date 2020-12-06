@@ -43,6 +43,12 @@ namespace SWE1_MTCG.Cards
             return true;
         }
 
+        public virtual bool AddCards(IEnumerable<Card> cards)
+        {
+            _cards.AddRange(cards);
+            return true;
+        }
+
         public bool RemoveCard(Card card)
         {
             return _cards.Remove(card);

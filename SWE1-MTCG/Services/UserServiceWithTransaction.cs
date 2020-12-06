@@ -11,6 +11,7 @@ using SWE1_MTCG.Cards;
 using SWE1_MTCG.Database;
 using SWE1_MTCG.Dto;
 using SWE1_MTCG.Enums;
+using SWE1_MTCG.JsonConverter;
 
 namespace SWE1_MTCG.Services
 {

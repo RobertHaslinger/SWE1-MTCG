@@ -20,7 +20,7 @@ namespace SWE1_MTCG.Cards
 
         #region properties
         public PackageType PackageType { get; set; }
-        public List<Card> Cards { get; }
+        public List<Card> Cards { get; init; }
         #endregion
 
         #region constructor
