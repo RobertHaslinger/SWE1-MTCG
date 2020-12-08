@@ -63,6 +63,12 @@ namespace SWE1_MTCG
             {
                 Stack.AddCards(JsonSerializer.Deserialize<List<Card>>(stack));
             }
+
+            string deck;
+            if (!string.IsNullOrWhiteSpace(deck = reader["Deck"].ToString()))
+            {
+                Deck.AddCards(JsonSerializer.Deserialize<List<Card>>(deck));
+            }
         }
 
         #endregion

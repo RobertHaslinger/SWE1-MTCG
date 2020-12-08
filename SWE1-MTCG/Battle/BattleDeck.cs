@@ -8,14 +8,13 @@ namespace SWE1_MTCG.Battle
 {
     public class BattleDeck : Deck
     {
-        public BattleDeck(IEnumerable cards)
+        public BattleDeck(IEnumerable<Card> cards) : base(cards)
         {
-            _cards = (List<Card>)cards;
         }
 
         public bool HasCardsLeft()
         {
-            return _cards.Count > 0;
+            return Cards.Count > 0;
         }
     }
 }

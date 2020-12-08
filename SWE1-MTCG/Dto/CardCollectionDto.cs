@@ -5,14 +5,17 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using SWE1_MTCG.Cards;
+using SWE1_MTCG.Interfaces;
 using SWE1_MTCG.Services;
 
 namespace SWE1_MTCG.Dto
 {
-    public class PackageDto : Dto<Package>
+    public class CardCollectionDto : Dto<ICardCollection>
     {
         public List<Guid> CardGuids { get; set; }
-        public override Package ToObject()
+        public Type CardCollectionType { get; set; }
+
+        public override ICardCollection ToObject()
         {
             ICardService cardService= new CardService();
             List<Card> cards= new List<Card>();
@@ -26,7 +29,12 @@ namespace SWE1_MTCG.Dto
                 }
             }
 
-            return cards.Count == CardGuids.Count ? new Package(cards) : null;
+            if (!CardCollectionType.IsAssignableTo(typeof(ICardCollection)))
+            {
+                return null;
+            }
+
+            return cards.Count == CardGuids.Count ? (ICardCollection)Activator.CreateInstance(CardCollectionType, cards) : null;
         }
     }
 }

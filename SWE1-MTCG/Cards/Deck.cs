@@ -21,6 +21,15 @@ namespace SWE1_MTCG.Cards
 
         #region constructor
 
+        public Deck()
+        {
+            
+        }
+
+        public Deck(IEnumerable<Card> cards) : base(cards)
+        {
+            
+        }
         #endregion
 
         #region private methods
@@ -36,39 +45,44 @@ namespace SWE1_MTCG.Cards
         /// <returns>bool - whether the card was added or not.</returns>
         public override bool AddCard(Card card)
         {
-            if (_cards.FindAll(c => c==card).Count >= 2)
+            if (Cards.FindAll(c => c==card).Count >= 2)
             {
                 return false;
             }
 
-            if (_cards.Count >= 4)
+            if (Cards.Count >= 4)
             {
                 return false;
             }
 
-            _cards.Add(card);
+            Cards.Add(card);
             return true;
         }
 
         public Card GetRandomCard()
         {
-            if (!_cards.Any())
+            if (!Cards.Any())
             {
                 return null;
             }
 
             Random random = new Random();
-            return _cards[random.Next(_cards.Count)];
+            return Cards[random.Next(Cards.Count)];
+        }
+
+        public void ClearDeck()
+        {
+            Cards.Clear();
         }
 
         public bool IsInDeck(Card card)
         {
-            return _cards.Contains(card);
+            return Cards.Contains(card);
         }
 
         public BattleDeck GetBattleDeck()
         {
-            return new BattleDeck(_cards);
+            return new BattleDeck(Cards);
         }
 
         #endregion

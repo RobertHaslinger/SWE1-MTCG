@@ -36,9 +36,10 @@ namespace SWE1_MTCG.Api
                 return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.UnsupportedMediaType, ""));
             }
 
-            PackageDto packageDto = JsonSerializer.Deserialize<PackageDto>(request.Payload);
+            CardCollectionDto packageDto = JsonSerializer.Deserialize<CardCollectionDto>(request.Payload);
+            packageDto.CardCollectionType = typeof(Package);
             Package package;
-            if (packageDto == null || packageDto.CardGuids.Count< 5 ||(package = packageDto.ToObject()) == null)
+            if (packageDto == null || packageDto.CardGuids.Count!= 5 ||(package = packageDto.ToObject() as Package) == null)
             {
                 return new ResponseContext(request,
                     new KeyValuePair<StatusCode, object>(StatusCode.BadRequest,

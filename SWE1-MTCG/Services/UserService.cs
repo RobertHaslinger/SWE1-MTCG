@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Npgsql;
 using NpgsqlTypes;
@@ -10,7 +11,7 @@ using SWE1_MTCG.Database;
 
 namespace SWE1_MTCG.Services
 {
-    public class UserService : IUserService
+    public class UserService : IUserService, IDeckService
     {
         public bool IsRegistered(User user)
         {
@@ -88,6 +89,26 @@ namespace SWE1_MTCG.Services
             }
 
             return null;
+        }
+
+        public bool ConfigureDeck(ref MtcgClient client)
+        {
+            string statement = "UPDATE mtcg.\"User\" " +
+                        "SET \"Deck\"=@deck " +
+                        "WHERE \"Username\"=@username AND \"Password_Hash\"=@password";
+            string[] credentials = client.User.Credentials.Split(':', 2);
+            using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+            {
+                cmd.Parameters.Add("username", NpgsqlDbType.Varchar).Value = credentials[0];
+                cmd.Parameters.Add("password", NpgsqlDbType.Bytea).Value = Encoding.UTF8.GetBytes(credentials[1]);
+                cmd.Parameters.Add("deck", NpgsqlDbType.Varchar).Value = JsonSerializer.Serialize(client.User.Deck.GetAllCards());
+                cmd.Prepare();
+                if (cmd.ExecuteNonQuery() != 1)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

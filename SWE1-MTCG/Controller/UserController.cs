@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Npgsql;
@@ -134,6 +135,53 @@ namespace SWE1_MTCG.Controller
                     return new KeyValuePair<StatusCode, object>(StatusCode.OK, package.GetAllCards());
                 }
 
+                return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, "");
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        public KeyValuePair<StatusCode, object> ConfigureDeck(ref MtcgClient client, Deck deck)
+        {
+            try
+            {
+                if (client == null)
+                    return new KeyValuePair<StatusCode, object>(StatusCode.Unauthorized, null);
+
+                //save old deck to fallback if necessary
+                Deck oldDeck = new Deck();
+                foreach (Card card in client.User.Deck.GetAllCards())
+                {
+                    oldDeck.AddCard(card);
+                }
+
+                //clear user deck
+                client.User.Deck.ClearDeck();
+
+                foreach (Card card in deck.GetAllCards())
+                {
+                    if (!client.User.Stack.GetAllCards().Any(c => c.Guid.Equals(card.Guid)))
+                    {
+                        return new KeyValuePair<StatusCode, object>(StatusCode.BadRequest, "You do not possess this card. Acquire some packages and you might will someday.");
+                    }
+
+                    if (!client.User.Deck.AddCard(card))
+                    {
+                        client.User.Deck.ClearDeck();
+                        client.User.Deck.AddCards(oldDeck.GetAllCards());
+                        return new KeyValuePair<StatusCode, object>(StatusCode.BadRequest, "The given deck either contains more than 4 cards or has more than 2 same cards.");
+                    }
+                }
+
+                if (((IDeckService)_userService).ConfigureDeck(ref client))
+                {
+                    return new KeyValuePair<StatusCode, object>(StatusCode.OK, client.User.Deck.GetAllCards());
+                }
+
+                client.User.Deck.ClearDeck();
+                client.User.Deck.AddCards(oldDeck.GetAllCards());
                 return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, "");
             }
             catch (Exception e)

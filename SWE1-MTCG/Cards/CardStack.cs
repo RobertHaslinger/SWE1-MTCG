@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using SWE1_MTCG.Interfaces;
 
@@ -11,7 +12,7 @@ namespace SWE1_MTCG.Cards
 
         #region fields
 
-        protected List<Card> _cards;
+        protected List<Card> Cards;
         #endregion
 
         #region properties
@@ -22,7 +23,12 @@ namespace SWE1_MTCG.Cards
 
         public CardStack()
         {
-            _cards = new List<Card>();
+            Cards = new List<Card>();
+        }
+
+        public CardStack(IEnumerable<Card> cards)
+        {
+            Cards = cards.ToList();
         }
         #endregion
 
@@ -34,24 +40,24 @@ namespace SWE1_MTCG.Cards
 
         public IEnumerable<Card> GetAllCards()
         {
-            return _cards;
+            return Cards;
         }
 
         public virtual bool AddCard(Card card)
         {
-            _cards.Add(card);
+            Cards.Add(card);
             return true;
         }
 
         public virtual bool AddCards(IEnumerable<Card> cards)
         {
-            _cards.AddRange(cards);
+            Cards.AddRange(cards);
             return true;
         }
 
         public bool RemoveCard(Card card)
         {
-            return _cards.Remove(card);
+            return Cards.Remove(card);
         }
 
         #endregion

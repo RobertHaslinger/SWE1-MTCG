@@ -57,14 +57,15 @@ namespace SWE1_MTCG.Services
         public bool AcquirePackage(ref MtcgClient client, PackageType type)
         {
             Package package=null;
-            PackageDto packageDto=null;
+            CardCollectionDto packageDto=null;
             int price=0;
             string statement;
             if (type == PackageType.Random)
             {
-                packageDto= new PackageDto()
+                packageDto= new CardCollectionDto()
                 {
-                    CardGuids = AcquireRandomPackage()
+                    CardGuids = AcquireRandomPackage(),
+                    CardCollectionType = typeof(Package)
                 };
                 price = GetPackagePrice(PackageType.Random);
             }
@@ -84,9 +85,10 @@ namespace SWE1_MTCG.Services
                         if (reader.HasRows)
                         {
                             reader.Read();
-                            packageDto = new PackageDto()
+                            packageDto = new CardCollectionDto()
                             {
-                                CardGuids = JsonSerializer.Deserialize<List<Guid>>(reader["Cards"].ToString())
+                                CardGuids = JsonSerializer.Deserialize<List<Guid>>(reader["Cards"].ToString()),
+                                CardCollectionType = typeof(Package)
                             };
                             price = (int)reader["Price"];
 
@@ -96,7 +98,7 @@ namespace SWE1_MTCG.Services
                 }
             }
             
-            package = packageDto?.ToObject();
+            package = packageDto?.ToObject() as Package;
 
             if (package == null)
                 return false;
