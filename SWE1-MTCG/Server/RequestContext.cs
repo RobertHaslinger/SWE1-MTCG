@@ -19,6 +19,7 @@ namespace SWE1_MTCG.Server
         public string HttpVersion { get; private set; }
         public string RequestedApi { get; private set; }
         public string RequestedResource { get; private set; }
+        public Dictionary<string, string> QueryParams { get; private set; }
         public Dictionary<string, string> Headers { get; private set; }
         public string Payload { get; private set; }
 
@@ -30,6 +31,7 @@ namespace SWE1_MTCG.Server
         private const string FullResourcePattern = "(http[s]?:\\/\\/)?[^\\s([\" <,>]*[\\.\\/][^\\s[\",><]*";
 
         private const string RequestedApiPattern = "((\\/\\w+){1,}\\/*[^\\d]){1,}";
+        private const string QueryParamsPattern = "(\\?\\w+\\=\\w+){1}(\\&\\w+\\=\\w+)*";
         private const string ValuesPattern = "((\\r\\n).+:.+)+(\\r\\n\\r\\n)";
         private const string PayloadPattern = "(\\r\\n\\r\\n)[^\\0]*";
 
@@ -43,6 +45,7 @@ namespace SWE1_MTCG.Server
             Regex valuesRegex = new Regex(ValuesPattern);
             Regex payloadRegex = new Regex(PayloadPattern);
             Regex requestedApiRegex= new Regex(RequestedApiPattern);
+            Regex queryParamsRegex= new Regex(QueryParamsPattern);
 
             try
             {
@@ -54,8 +57,18 @@ namespace SWE1_MTCG.Server
             }
             HttpVersion = headerRegex.Match(header).Value;
             string fullResource = fullResourceRegex.Match(header).Value;
-            RequestedApi = requestedApiRegex.Match(fullResource).Value.TrimEnd('/');
-            RequestedResource = requestedApiRegex.Replace(fullResource, "", 1).TrimStart('/');
+            RequestedApi = requestedApiRegex.Match(fullResource).Value.TrimEnd('/', '?');
+
+            QueryParams= new Dictionary<string, string>();
+            string queryParamPairs = queryParamsRegex.Match(fullResource).Value.TrimStart('?');
+            foreach (string queryParam in queryParamPairs.Split('&', StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (string.IsNullOrWhiteSpace(queryParam)) continue;
+
+                string[] valuePair = queryParam.Split('=');
+                QueryParams.Add(valuePair[0].Trim(), valuePair[1].Trim());
+            }
+            RequestedResource = requestedApiRegex.Replace(queryParamsRegex.Replace(fullResource, "", 1), "", 1).TrimStart('/');
             Headers = new Dictionary<string, string>();
 
             string headerValuePairs = valuesRegex.Match(header).Value;
