@@ -107,6 +107,18 @@ namespace SWE1_MTCG.Controller
             }
         }
 
+        public KeyValuePair<StatusCode, object> ViewStats(ref MtcgClient client)
+        {
+            try
+            {
+                return new KeyValuePair<StatusCode, object>(StatusCode.OK, client.User.Stats);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
         public KeyValuePair<StatusCode, object> AcquirePackage(ref MtcgClient client, PackageType type)
         {
             if (!(_userService is IPackageTransactionService && _userService is ILoggable))

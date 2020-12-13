@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using SWE1_MTCG.Client;
 using SWE1_MTCG.Controller;
 using SWE1_MTCG.Dto;
 using SWE1_MTCG.Enums;

@@ -1,18 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SWE1_MTCG.Client;
+using SWE1_MTCG.Controller;
 using SWE1_MTCG.Interfaces;
 using SWE1_MTCG.Server;
+using SWE1_MTCG.Services;
 
 namespace SWE1_MTCG.Api
 {
     public class StatisticApi : IRestApi
     {
-        public bool AllowAnonymous => true;
+        private UserController _userController;
+        public bool AllowAnonymous => false;
+
+        public StatisticApi()
+        {
+            IUserService userService= new UserService();
+            _userController= new UserController(userService);
+        }
 
         public ResponseContext Get(Dictionary<string, object> param)
         {
-            throw new NotImplementedException();
+            RequestContext request = (RequestContext)param["request"];
+            MtcgClient client = (MtcgClient)param["client"];
+
+            return new ResponseContext(request, _userController.ViewStats(ref client));
         }
 
         public ResponseContext Post(Dictionary<string, object> param)

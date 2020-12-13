@@ -26,6 +26,7 @@ namespace SWE1_MTCG.Client
         public string Username { get; init; }
         public string Credentials { get; init; }
         public Profile Profile { get; set; }
+        public UserStatistic Stats { get; set; }
         [JsonIgnore]
         public int UserId { get; }
         [JsonIgnore]
@@ -75,6 +76,16 @@ namespace SWE1_MTCG.Client
             if (!string.IsNullOrWhiteSpace(profile = reader["Profile"].ToString()))
             {
                 Profile = JsonSerializer.Deserialize<Profile>(profile);
+            }
+
+            string stats;
+            if (!string.IsNullOrWhiteSpace(stats = reader["Stats"].ToString()))
+            {
+                Stats = JsonSerializer.Deserialize<UserStatistic>(stats);
+            }
+            else
+            {
+                Stats= new UserStatistic();
             }
         }
 
