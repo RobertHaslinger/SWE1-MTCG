@@ -26,9 +26,21 @@ namespace SWE1_MTCG.Api
 
         public ResponseContext Get(Dictionary<string, object> param)
         {
-            throw new NotImplementedException();
+            RequestContext request = (RequestContext)param["request"];
+
+            if (!request.QueryParams.ContainsKey("username"))
+            {
+                return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.BadRequest, ""));
+            }
+
+            return new ResponseContext(request, _userController.ViewProfile(request.QueryParams["username"]));
         }
 
+        /// <summary>
+        /// Register
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
         public ResponseContext Post(Dictionary<string, object> param)
         {
             RequestContext request = (RequestContext) param["request"];
@@ -46,9 +58,26 @@ namespace SWE1_MTCG.Api
             return new ResponseContext(request, _userController.Register(userDto.Username, userDto.Password));
         }
 
-        public ResponseContext Put(Dictionary<string, object> param)
+        /// <summary>
+        /// Edit Profile
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public virtual ResponseContext Put(Dictionary<string, object> param)
         {
-            throw new NotImplementedException();
+            RequestContext request = (RequestContext)param["request"];
+            if (!param.ContainsKey("client"))
+            {
+                return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.Unauthorized, "You need to log in to use this service."));
+            }
+            MtcgClient client = (MtcgClient) param["client"];
+            if (!request.Headers.ContainsKey("Content-Type") || request.Headers["Content-Type"] != "application/json")
+            {
+                return new ResponseContext(request, new KeyValuePair<StatusCode, object>(StatusCode.UnsupportedMediaType, ""));
+            }
+
+            Profile profile = JsonSerializer.Deserialize<Profile>(request.Payload);
+            return new ResponseContext(request, _userController.EditProfile(ref client, profile));
         }
 
         public ResponseContext Delete(Dictionary<string, object> param)

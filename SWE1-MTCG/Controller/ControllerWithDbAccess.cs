@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Npgsql;
 using SWE1_MTCG.Enums;
@@ -29,6 +30,11 @@ namespace SWE1_MTCG.Controller
                     { } state when state.StartsWith("23") => new KeyValuePair<StatusCode, object>(StatusCode.Conflict, "This item may exist already"),
                     _ => new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, null)
                 };
+            }
+
+            if (ex is JsonException)
+            {
+                return new KeyValuePair<StatusCode, object>(StatusCode.NoContent, "There is nothing here...");
             }
 
             return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, null);

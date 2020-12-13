@@ -25,6 +25,7 @@ namespace SWE1_MTCG
 
         public string Username { get; init; }
         public string Credentials { get; init; }
+        public Profile Profile { get; set; }
         [JsonIgnore]
         public int UserId { get; }
         [JsonIgnore]
@@ -68,6 +69,12 @@ namespace SWE1_MTCG
             if (!string.IsNullOrWhiteSpace(deck = reader["Deck"].ToString()))
             {
                 Deck.AddCards(JsonSerializer.Deserialize<List<Card>>(deck));
+            }
+
+            string profile;
+            if (!string.IsNullOrWhiteSpace(profile = reader["Profile"].ToString()))
+            {
+                Profile = JsonSerializer.Deserialize<Profile>(profile);
             }
         }
 

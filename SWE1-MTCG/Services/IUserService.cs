@@ -11,5 +11,7 @@ namespace SWE1_MTCG.Services
         bool IsRegistered(User user);
         bool Register(User user);
         MtcgClient Login(User user);
+        Profile ViewProfile(string username);
+        bool EditProfile(ref MtcgClient client, Profile profile);
     }
 }

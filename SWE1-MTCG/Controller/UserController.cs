@@ -75,6 +75,37 @@ namespace SWE1_MTCG.Controller
             }
         }
 
+        public KeyValuePair<StatusCode, object> ViewProfile(string username)
+        {
+            try
+            {
+                Profile profile;
+                if ((profile= _userService.ViewProfile(username))==null)
+                    return new KeyValuePair<StatusCode, object>(StatusCode.NotFound, "");
+                return new KeyValuePair<StatusCode, object>(StatusCode.OK, profile);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        public KeyValuePair<StatusCode, object> EditProfile(ref MtcgClient client, Profile profile)
+        {
+            try
+            {
+                if (_userService.EditProfile(ref client, profile))
+                {
+                    return new KeyValuePair<StatusCode, object>(StatusCode.OK, profile);
+                }
+                return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, "Something went wrong");
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
         public KeyValuePair<StatusCode, object> AcquirePackage(ref MtcgClient client, PackageType type)
         {
             if (!(_userService is IPackageTransactionService && _userService is ILoggable))
