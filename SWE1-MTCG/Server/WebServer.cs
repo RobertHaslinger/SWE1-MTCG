@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using Npgsql;
+using SWE1_MTCG.Client;
 using SWE1_MTCG.Database;
 using SWE1_MTCG.Enums;
 using SWE1_MTCG.Interfaces;

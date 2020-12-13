@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SWE1_MTCG.Cards;
+using SWE1_MTCG.Client;
 
 namespace SWE1_MTCG.Services
 {

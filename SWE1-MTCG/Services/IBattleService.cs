@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SWE1_MTCG.Client;
 using SWE1_MTCG.Enums;
 
 namespace SWE1_MTCG.Services

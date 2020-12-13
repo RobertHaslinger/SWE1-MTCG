@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using SWE1_MTCG.Cards;
+using SWE1_MTCG.Client;
 
 namespace SWE1_MTCG.Trade
 {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using Npgsql;
 using SWE1_MTCG.Cards;
+using SWE1_MTCG.Client;
 using SWE1_MTCG.Enums;
 using SWE1_MTCG.Server;
 using SWE1_MTCG.Services;

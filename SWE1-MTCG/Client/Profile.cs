@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE1_MTCG
+namespace SWE1_MTCG.Client
 {
     public class Profile
     {

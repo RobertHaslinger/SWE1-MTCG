@@ -12,7 +12,7 @@ using SWE1_MTCG.Interfaces;
 using SWE1_MTCG.JsonConverter;
 using SWE1_MTCG.Services;
 
-namespace SWE1_MTCG
+namespace SWE1_MTCG.Client
 {
     public class User
     {

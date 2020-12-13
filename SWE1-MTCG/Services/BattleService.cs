@@ -4,6 +4,7 @@ using System.Text;
 using SWE1_MTCG.Battle;
 using SWE1_MTCG.Cards;
 using SWE1_MTCG.Cards.Monster;
+using SWE1_MTCG.Client;
 using SWE1_MTCG.Enums;
 using SWE1_MTCG.Interfaces;
 

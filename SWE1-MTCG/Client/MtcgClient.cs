@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SWE1_MTCG.Server;
 
-namespace SWE1_MTCG
+namespace SWE1_MTCG.Client
 {
     public class MtcgClient
     {
