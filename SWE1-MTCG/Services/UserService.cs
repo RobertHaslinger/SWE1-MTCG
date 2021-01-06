@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -156,6 +157,35 @@ namespace SWE1_MTCG.Services
 
             client.User.Profile = profile;
             return true;
+        }
+
+        public List<string> GetScoreboard(MtcgClient client)
+        {
+            List<User> users= new List<User>();
+            string statement = "SELECT * FROM mtcg.\"User\"";
+            using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+            {
+                cmd.Prepare();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        User user = new User(reader);
+                        users.Add(user);
+                    }
+
+                }
+            }
+
+            return users.OrderByDescending(u => u.Stats.Elo)
+                .Select((u, rank) => GetRankString(client, u, rank+1)).ToList();
+        }
+
+        private string GetRankString(MtcgClient client, User user, int rank)
+        {
+            if (client.User.Username != user.Username)
+                return $"{rank}. {user.Username}: {user.Stats.Elo} ELO";
+            return $"You ({user.Username}) are in the {rank}. place {user.Stats.Elo} ELO!";
         }
     }
 }
