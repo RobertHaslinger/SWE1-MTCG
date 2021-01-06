@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Npgsql;
 using NpgsqlTypes;
 using NUnit.Framework;
+using SWE1_MTCG.Client;
 using SWE1_MTCG.Database;
 
 namespace SWE1_MTCG.Test

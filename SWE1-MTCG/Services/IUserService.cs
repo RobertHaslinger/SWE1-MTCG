@@ -14,6 +14,7 @@ namespace SWE1_MTCG.Services
         MtcgClient Login(User user);
         Profile ViewProfile(string username);
         bool EditProfile(ref MtcgClient client, Profile profile);
+        bool EditStats(MtcgClient client);
 
         List<string> GetScoreboard(MtcgClient client);
     }

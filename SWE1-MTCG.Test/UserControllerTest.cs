@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using SWE1_MTCG.Cards;
+using SWE1_MTCG.Client;
 using SWE1_MTCG.Controller;
 using SWE1_MTCG.Enums;
 using SWE1_MTCG.Services;

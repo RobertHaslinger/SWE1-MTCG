@@ -159,6 +159,26 @@ namespace SWE1_MTCG.Services
             return true;
         }
 
+        public bool EditStats(MtcgClient client)
+        {
+            string statement = "UPDATE mtcg.\"User\" " +
+                               "SET \"Stats\"=@stats " +
+                               "WHERE \"Username\"=@username AND \"Password_Hash\"=@password";
+            string[] credentials = client.User.Credentials.Split(':', 2);
+            using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+            {
+                cmd.Parameters.Add("username", NpgsqlDbType.Varchar).Value = credentials[0];
+                cmd.Parameters.Add("password", NpgsqlDbType.Bytea).Value = Encoding.UTF8.GetBytes(credentials[1]);
+                cmd.Parameters.Add("stats", NpgsqlDbType.Varchar).Value = JsonSerializer.Serialize(client.User.Stats);
+                cmd.Prepare();
+                if (cmd.ExecuteNonQuery() != 1)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public List<string> GetScoreboard(MtcgClient client)
         {
             List<User> users= new List<User>();

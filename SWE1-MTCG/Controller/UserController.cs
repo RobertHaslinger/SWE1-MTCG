@@ -107,6 +107,22 @@ namespace SWE1_MTCG.Controller
             }
         }
 
+        public KeyValuePair<StatusCode, object> EditStats(MtcgClient client)
+        {
+            try
+            {
+                if (_userService.EditStats(client))
+                {
+                    return new KeyValuePair<StatusCode, object>(StatusCode.OK, client);
+                }
+                return new KeyValuePair<StatusCode, object>(StatusCode.InternalServerError, "Something went wrong");
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
         public KeyValuePair<StatusCode, object> ViewStats(ref MtcgClient client)
         {
             try

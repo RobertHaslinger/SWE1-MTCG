@@ -10,6 +10,7 @@ namespace SWE1_MTCG.Battle
     {
         public BattleDeck(IEnumerable<Card> cards) : base(cards)
         {
+
         }
 
         public bool HasCardsLeft()
