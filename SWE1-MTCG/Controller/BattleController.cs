@@ -49,7 +49,7 @@ namespace SWE1_MTCG.Controller
                     {
                         int delta = CalculateEloDelta(battle.Player1.User, battle.Player2.User);
                         battle.Player1.User.Stats.Elo += delta;
-                        battle.Player2.User.Stats.Elo += delta;
+                        battle.Player2.User.Stats.Elo -= delta;
                         battle.Player1.User.Stats.Logs.Add(result.Value);
                         battle.Player1.User.Stats.Wins++;
                         battle.Player2.User.Stats.Logs.Add(result.Value);
@@ -60,7 +60,7 @@ namespace SWE1_MTCG.Controller
                     {
                         int delta = CalculateEloDelta(battle.Player2.User, battle.Player1.User);
                         battle.Player2.User.Stats.Elo += delta;
-                        battle.Player1.User.Stats.Elo += delta;
+                        battle.Player1.User.Stats.Elo -= delta;
                         battle.Player2.User.Stats.Logs.Add(result.Value);
                         battle.Player2.User.Stats.Wins++;
                         battle.Player1.User.Stats.Logs.Add(result.Value);

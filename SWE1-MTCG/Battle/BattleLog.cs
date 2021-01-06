@@ -9,7 +9,7 @@ namespace SWE1_MTCG.Battle
 {
     public class BattleLog
     {
-        public DateTime Date= DateTime.Now;
+        public DateTime Date { get; set; }= DateTime.Now;
         public string Winner { get; set; }
         public string Loser { get; set; }
         public bool Draw { get; set; }
