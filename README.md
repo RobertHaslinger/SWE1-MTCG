@@ -68,3 +68,14 @@ Ebenso wurden Tests für das komplexe deserialisieren von Karten erstellt und au
 Im Verlauf des Projekts wurden die Funktionalität der Apis mit Postman getestet ([Vollständige Postman Dokumentation](https://documenter.getpostman.com/view/13224957/TVzREcYQ)).
 
 Einzelne Apis und Funktionalitäten wurden auch mit curl getestet.
+
+Unterschiede zu dem vorgegebenen Skript:
+
+* In diesem Projekt werden zuerst einzelne Karten erstellt (Name, CardType, Damage, Element) und als Ergebnis bekommt man die Id der erstellten Karte
+* Beim Erstellen von Packages werden nur die erzeugten Card Ids mitgegeben
+* Mit /transactions/packages kann man Packages erwerben. Mit /packages/open kann man ein Package öffnen
+* Mit POST /deck kann man sein Deck das 1. Mal konfigurieren. Danach sollte man PUT verwenden.
+* Die User Data wird mit einem Query Parameter (?username=) statt mit einer Resource erreicht, somit kann man sich auch Profile anderer Nutzer ansehen
+* Beim Editieren des Profils muss man keine Resource angeben, da man nur das eigene Profil bearbeiten kann
+* Bei /tradings kann man ebenso mit einem Query Parameter (?username=) offene Deals nach Benutzer filtern
+* Beim Erstellen eines Trades gibt man zusätzlich das Element der Karte, welche man erhalten will, mit
