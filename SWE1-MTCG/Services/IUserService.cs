@@ -16,6 +16,8 @@ namespace SWE1_MTCG.Services
         bool EditProfile(ref MtcgClient client, Profile profile);
         bool EditStats(MtcgClient client);
 
+        bool DeleteFromStack(int userId, Guid cardId);
+        bool AddToStack(int userId, Guid cardId);
         List<string> GetScoreboard(MtcgClient client);
     }
 }

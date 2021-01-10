@@ -23,11 +23,6 @@ namespace SWE1_MTCG.Cards
             Element = element;
         }
 
-        public CardStat GetCardStat()
-        {
-            return new CardStat(Name, Damage, Element);
-        }
-
         public override string ToString()
         {
             string type = GetType().FullName;

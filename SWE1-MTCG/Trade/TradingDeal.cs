@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
+using Npgsql;
 using SWE1_MTCG.Cards;
 using SWE1_MTCG.Client;
 
@@ -12,20 +14,37 @@ namespace SWE1_MTCG.Trade
 
         #region fields
 
-        private User _requestor;
-
         #endregion
 
         #region properties
 
-        public CardStat Offer { get; private set; }
-        public CardStat Request { get; private set; }
+        public Guid Guid { get; set; }
+        public int PublisherId { get; set; }
+        public int FullfillerId { get; set; }
+        public bool IsFullfilled { get; set; }
+        public Guid CardId { get; set; }
+        public string RequestedType { get; set; }
+        public double MinimumDamage { get; set; }
+        public string RequestedElement { get; set; }
         #endregion
 
         #region constructor
-        public TradingDeal(User requestor)
+
+        public TradingDeal()
         {
-            _requestor = requestor;
+            
+        }
+
+        public TradingDeal(NpgsqlDataReader reader)
+        {
+            Guid= System.Guid.Parse(reader["Guid"].ToString());
+            PublisherId = (int)reader["PublisherId"];
+            FullfillerId = string.IsNullOrWhiteSpace(reader["FullfillerId"].ToString()) ? -1 : (int) reader["FullfillerId"];
+            IsFullfilled = (bool) reader["IsFullfilled"];
+            CardId= System.Guid.Parse(reader["CardId"].ToString());
+            RequestedType = reader["RequestedType"].ToString();
+            MinimumDamage = (double) reader["MinimumDamage"];
+            RequestedElement = reader["RequestedElement"].ToString();
         }
 
         #endregion
@@ -35,31 +54,6 @@ namespace SWE1_MTCG.Trade
         #endregion
 
         #region public methods
-        public string GetRequestor()
-        {
-            return _requestor.Username;
-        }
-
-        public void AddOffer(CardStat offer)
-        {
-            Offer = offer;
-        }
-
-        public void AddRequest(CardStat request)
-        {
-            Request = request;
-        }
-
-        public bool IsQualifiedDeal()
-        {
-            return _requestor != null && Offer != null && Request != null;
-        }
-
-        public bool CardStatMatchesRequest(CardStat cardStat)
-        {
-            return cardStat.Name.Contains(Request.Name) && Request.Damage <= cardStat.Damage &&
-                   Request.Element == cardStat.Element;
-        }
         #endregion
 
 

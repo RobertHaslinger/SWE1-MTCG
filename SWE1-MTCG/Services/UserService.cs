@@ -10,6 +10,7 @@ using NpgsqlTypes;
 using SWE1_MTCG.Cards;
 using SWE1_MTCG.Client;
 using SWE1_MTCG.Database;
+using SWE1_MTCG.Server;
 
 namespace SWE1_MTCG.Services
 {
@@ -176,6 +177,114 @@ namespace SWE1_MTCG.Services
                     return false;
                 }
             }
+            return true;
+        }
+
+        public bool DeleteFromStack(int userId, Guid cardId)
+        {
+            string statement = "";
+            User user = null;
+            MtcgClient client = null;
+            if ((client =
+                ClientMapSingleton.GetInstance.ClientMap.Values.FirstOrDefault(c => c.User.UserId == userId)) == null)
+            {
+                statement = "SELECT * FROM mtcg.\"User\" " +
+                            "WHERE \"Id\"=@userId";
+                using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+                {
+                    cmd.Parameters.Add("userId", NpgsqlDbType.Integer).Value = userId;
+                    cmd.Prepare();
+                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                    {
+                        if (reader.Read())
+                        {
+                            user= new User(reader);
+                        }
+
+                    }
+                }
+
+                if (user == null)
+                    return false;
+
+                user.Stack.RemoveCard(cardId);
+            }
+            else
+            {
+                client.User.Stack.RemoveCard(cardId);
+                ClientMapSingleton.GetInstance.ClientMap.AddOrUpdate(client.SessionToken, client,
+                    (key, oldValue) => client);
+                user = client.User;
+            }
+
+            statement = "UPDATE mtcg.\"User\" " +
+                               "SET \"Stack\"=@stack " +
+                               "WHERE \"Id\"=@userId";
+            using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+            {
+                cmd.Parameters.Add("userId", NpgsqlDbType.Integer).Value = userId;
+                cmd.Parameters.Add("stack", NpgsqlDbType.Varchar).Value = JsonSerializer.Serialize(user.Stack.GetAllCards());
+                cmd.Prepare();
+                if (cmd.ExecuteNonQuery() != 1)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool AddToStack(int userId, Guid cardId)
+        {
+            string statement = "";
+            User user = null;
+            MtcgClient client = null;
+            if ((client =
+                ClientMapSingleton.GetInstance.ClientMap.Values.FirstOrDefault(c => c.User.UserId == userId)) == null)
+            {
+                statement = "SELECT * FROM mtcg.\"User\" " +
+                            "WHERE \"Id\"=@userId";
+                using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+                {
+                    cmd.Parameters.Add("userId", NpgsqlDbType.Integer).Value = userId;
+                    cmd.Prepare();
+                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleResult))
+                    {
+                        if (reader.Read())
+                        {
+                            user = new User(reader);
+                        }
+
+                    }
+                }
+
+                if (user == null)
+                    return false;
+
+                user.Stack.AddCard(cardId);
+            }
+            else
+            {
+                client.User.Stack.AddCard(cardId);
+                ClientMapSingleton.GetInstance.ClientMap.AddOrUpdate(client.SessionToken, client,
+                    (key, oldValue) => client);
+                user = client.User;
+            }
+
+            statement = "UPDATE mtcg.\"User\" " +
+                               "SET \"Stack\"=@stack " +
+                               "WHERE \"Id\"=@userId";
+            using (NpgsqlCommand cmd = new NpgsqlCommand(statement, PostgreSQLSingleton.GetInstance.Connection))
+            {
+                cmd.Parameters.Add("userId", NpgsqlDbType.Integer).Value = userId;
+                cmd.Parameters.Add("stack", NpgsqlDbType.Varchar).Value = JsonSerializer.Serialize(user.Stack.GetAllCards());
+                cmd.Prepare();
+                if (cmd.ExecuteNonQuery() != 1)
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 

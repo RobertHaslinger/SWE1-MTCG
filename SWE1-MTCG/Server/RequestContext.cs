@@ -30,7 +30,7 @@ namespace SWE1_MTCG.Server
         /// </summary>
         private const string FullResourcePattern = "(http[s]?:\\/\\/)?[^\\s([\" <,>]*[\\.\\/][^\\s[\",><]*";
 
-        private const string RequestedApiPattern = "((\\/\\w+){1,}\\/*[^\\d]){1,}";
+        private const string RequestedApiPattern = "((\\/\\w+){1,}\\/*[^\\d](?=(([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})|[0-9]*$|\\?))){1,}";
         private const string QueryParamsPattern = "(\\?\\w+\\=\\w+){1}(\\&\\w+\\=\\w+)*";
         private const string ValuesPattern = "((\\r\\n).+:.+)+(\\r\\n\\r\\n)";
         private const string PayloadPattern = "(\\r\\n\\r\\n)[^\\0]*";

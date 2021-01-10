@@ -10,10 +10,13 @@ namespace SWE1_MTCG.Services
 {
     public interface IMarketService
     {
-        IEnumerable GetOpenTradingDealsForUser(User user);
+        IEnumerable GetOpenTradingDealsForUser(string username);
         IEnumerable GetAllOpenTradingDeals();
-        bool AddTradingDeal(TradingDeal deal);
+        TradingDeal AddTradingDeal(TradingDeal deal);
 
-        bool Trade(TradingDeal deal, CardStat bid);
+        bool Trade(TradingDeal deal, int fullfillerId);
+
+        TradingDeal GetOpenTradingDeal(Guid tradeId);
+        bool DeleteTradingDeal(TradingDeal deal);
     }
 }
