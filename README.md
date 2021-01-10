@@ -13,7 +13,7 @@ Link zu GitHub: https://github.com/RobertHaslinger/SWE1-MTCG
 
 Für dieses Projekt wurde PostgreSQL lokal installiert. Als GUI habe ich pgAdmin 4 verwendet.
 
-Der Connection String ist unter SWE1_MTCG/Database/PostgreSQLSingleton.cs zu finden und kann bei Bedarf geändert werden.
+Der Connection String ist im [DB Singleton](https://github.com/RobertHaslinger/SWE1-MTCG/blob/master/SWE1-MTCG/Database/PostgreSQLSingleton.cs) zu finden und kann bei Bedarf geändert werden.
 Diese Klasse enthält die Verbindung zur Datenbank. 
 
 Die Datenbank für dieses Projekt hat folgende Eigenschaften:
@@ -33,3 +33,38 @@ Die Datenbank für dieses Projekt hat folgende Eigenschaften:
   * PackageType
   * Transactions
   * TradingDeal
+  
+Um diese Datenbank zu reproduzieren muss einfach die Datei [DB Create](https://github.com/RobertHaslinger/SWE1-MTCG/blob/master/db_create.sql) ausgeführt werden.
+
+In diesem Projekt wurde weniger mit Relationen gearbeitet, dafür umso mehr mit serialisierten JSONs in einer Tabelle. Dies dient dem Zweck einer einfacheren Handhabung mit den Daten.
+
+### Aufbau der Applikation
+
+* Es gibt einen [Server](https://github.com/RobertHaslinger/SWE1-MTCG/blob/master/SWE1-MTCG/Server/WebServer.cs), welcher asynchron Verbindungen annimmt und diese in einem neuen Thread bearbeitet (mit einer Unterscheidung zwischen anonymous und known Clients)
+* Die Klasse [RequestContext](https://github.com/RobertHaslinger/SWE1-MTCG/blob/master/SWE1-MTCG/Server/RequestContext.cs) hilft bei der Verarbeitung von eingehenden Requests
+* Danach entscheidet der [ApiService](https://github.com/RobertHaslinger/SWE1-MTCG/blob/master/SWE1-MTCG/Services/ApiService.cs) mit welchem Endpunkt die Request bearbeitet wird
+* Die entsprechende [Api](https://github.com/RobertHaslinger/SWE1-MTCG/tree/master/SWE1-MTCG/Api) bekommt dann die Request und den eingeloggten Client falls verfügbar, und ruft je nach [Http Methode](https://github.com/RobertHaslinger/SWE1-MTCG/blob/master/SWE1-MTCG/Enums/HttpMethod.cs) die entsprechende Methode eines [Controllers](https://github.com/RobertHaslinger/SWE1-MTCG/tree/master/SWE1-MTCG/Controller) auf
+* Der Controller steht in Verbindung mit den [Services](https://github.com/RobertHaslinger/SWE1-MTCG/tree/master/SWE1-MTCG/Services), welche mit der DB kommunizieren. Außerdem werden in dem Controller etliche Exceptions abgefangen und mit wertvollen Informationen an die Api zurückgeschickt
+* Die Api bildet dann aus dem Ergebnis (KeyValuePair<[StatusCode](https://github.com/RobertHaslinger/SWE1-MTCG/blob/master/SWE1-MTCG/Enums/StatusCode.cs), object>) eine [Response](https://github.com/RobertHaslinger/SWE1-MTCG/blob/master/SWE1-MTCG/Server/RequestContext.cs) und schickt diese über den Server zurück an den Client
+
+### User Management
+
+Der [Client Singleton](https://github.com/RobertHaslinger/SWE1-MTCG/blob/master/SWE1-MTCG/Server/ClientMapSingleton.cs) ist threadsafe und speichert eingeloggte Clients in memory.
+
+Bei der Verarbeitung einer Request wird mithilfe dieses Singletons entschieden, ob es sich um einen anonymen oder eingeloggten Client handelt. Dafür haben die Apis die Eigenschaft `AllowAnonymous`, welche die Zugänglichkeit beschreibt.
+
+## Tests
+
+### Unit Tests
+
+Im [Test Projekt](https://github.com/RobertHaslinger/SWE1-MTCG/tree/master/SWE1-MTCG.Test) sind über 50 Unit Tests vorhanden. Ein paar wenige wurden auskommentiert, da sie mit Fortschreitung des Projekts deprecated wurden.
+
+Im Fokus der Unit Tests lagen für mich vor allem das Zusammenspiel der Elemente und Kartentypen, welche in den Testklassen reichlich ausgetestet wurden.
+
+Ebenso wurden Tests für das komplexe deserialisieren von Karten erstellt und auch für die Funktionalität der Datenbank.
+
+### Integration Tests
+
+Im Verlauf des Projekts wurden die Funktionalität der Apis mit Postman getestet ([Vollständige Postman Dokumentation](https://documenter.getpostman.com/view/13224957/TVzREcYQ)).
+
+Einzelne Apis und Funktionalitäten wurden auch mit curl getestet.
