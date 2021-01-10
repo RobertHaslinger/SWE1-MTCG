@@ -79,3 +79,22 @@ Unterschiede zu dem vorgegebenen Skript:
 * Beim Editieren des Profils muss man keine Resource angeben, da man nur das eigene Profil bearbeiten kann
 * Bei /tradings kann man ebenso mit einem Query Parameter (?username=) offene Deals nach Benutzer filtern
 * Beim Erstellen eines Trades gibt man zusätzlich das Element der Karte, welche man erhalten will, mit
+
+## Pitfalls
+
+Wirklich enorme Pitfalls gab es nicht. Ein paar komplexere Themen waren:
+
+* das Erstellen des Request Flows (Server -> Api -> Controller -> Service und wieder retour)
+* das Speichern von etlichen Daten in der Datenbank (z.B.: User Statistiken)
+* die Battle Logik und Synchronisation von zwei Clients
+* das Traden und somit das Tauschen zweier Karten
+
+## Lessions Learned
+
+* TDD ist sehr gut und wichtig, um einen "roten Faden" für das Projekt zu erstellen, wenn man ganz an Anfang steht. Jedoch werden manche Tests deprecated sobald eine gewisse Komplexität erreicht wird, bzw. manche Klassen geändert werden müssen.
+
+* Für dieses Projekt und meinen individuellen Stil hätte eine dokumentenbasierte NoSql Datenbank (z.B.: MongoDB) vieles erleichert/übersichtlicher gemacht.
+
+* Mit Branches zu arbeiten erleichtert die Aufgabenteilung in mehrere abgrenzbare Bereiche und Bugs/neue Features lassen sich leichter ausbessern und implementieren.
+
+* **Last but not least**: Ein vollautomatisches curl-Skript für Integration Tests lässt sich nicht leicht erzeugen, wenn man Ids einzigartig zur Runtime erzeugt :) 
