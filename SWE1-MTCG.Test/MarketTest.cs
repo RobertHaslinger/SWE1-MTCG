@@ -78,6 +78,6 @@ namespace SWE1_MTCG.Test
         //    _marketController.ProcessTrade(deal, bid);
 
         //    _marketService.Verify(s => s.Trade(deal, bid), Times.Once);
-        }
+        //}
     }
 }
